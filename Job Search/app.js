@@ -41,7 +41,15 @@ app.get('/login', function(req, res, next){
   if (req.user) {
     res.redirect('homepage');
   } else
-    res.sendFile(__dirname + '/views/searchusers.html');
+    res.sendFile(__dirname + '/views/login.html');
+});
+
+//Register page
+app.get('/', function(req, res, next){
+  if (req.user) {
+    res.redirect('homepage');
+  } else
+    res.sendFile(__dirname + '/views/register.html');
 });
 
 app.get("/homepage", function (req, res) {
@@ -55,9 +63,9 @@ app.get("/homepage", function (req, res) {
 //Sign up API
 app.post('/register', async function(req, res, next) {
   try {
-    const {first_name, last_name, email, password, type} = req.body;
+    const {first_name, last_name, email, password, type, school} = req.body;
     //validate input
-    if (!(email && password && first_name && last_name && type)) {
+    if (!(email && password && first_name && last_name && type && school)) {
       return res.status(400).send("Some fields are missing.");
     }
     //check for existing user
@@ -77,6 +85,7 @@ app.post('/register', async function(req, res, next) {
       'last_name': last_name,
       'email': email.toLowerCase(),
       'password': encr_pword,
+      'school':school,
       'type': type,
     };
 
