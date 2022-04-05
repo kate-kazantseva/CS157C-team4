@@ -60,6 +60,11 @@ app.get("/homepage", function (req, res) {
   }
 });
 
+// Create job listing Page
+app.get('/joblisting/create', function(req, res, next){
+  res.sendFile(__dirname + '/views/createjoblisting.html');
+});
+
 //Sign up API
 app.post('/register', async function(req, res, next) {
   try {
