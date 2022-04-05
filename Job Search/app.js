@@ -94,17 +94,8 @@ app.post('/register', async function(req, res, next) {
       'type': type,
     };
 
-    const token = jwt.sign(
-      { user_id: email },
-      'secret',
-      {
-        expiresIn: "2h",
-      }
-    );
-    user.token = token;
-
-    res.status(201).json(user);
-
+    res.redirect('login');
+    
   } catch (err) {
     console.log(err);
   }
