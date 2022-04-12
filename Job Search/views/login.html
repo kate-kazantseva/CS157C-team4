@@ -1,8 +1,15 @@
 <!DOCTYPE html>
   <head>
 	<title>Example Login Form</title>
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="/css/base.css">
+	
   </head>
   <body>
+	<h1>Login</h1>
 	<form action="/login" method="post">
   	<!-- user input-->
   	Email:<br>
@@ -10,7 +17,7 @@
   	Password:<br>
   	<input type="password" name="password" placeholder="Password" required><br><br>
   	<!-- submit button -->
-  	<input type="submit" value="login">
+  	<input type="submit" class="btn btn-primary" value="login">
 	</form>
   </body>
 </html>

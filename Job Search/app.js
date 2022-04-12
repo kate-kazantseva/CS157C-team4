@@ -36,6 +36,9 @@ app.use((req, res, next) => {
   next();
 });
 
+// Load css
+app.use(express.static('public'));
+
 //Login page
 app.get('/login', function(req, res, next){
   if (req.user) {
