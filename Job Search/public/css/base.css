@@ -1,6 +1,41 @@
 body{
-    padding:8rem;
+    padding-top:5rem;
     font-family: arial;
     font-size: 16px;
-    color:#2E3532;
+}
+
+h1{
+    text-align: center;
+    font-weight:bold;
+    color:#393939;
+}
+
+.container{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.form-row{
+    justify-content:center;
+    padding-bottom:1rem;
+    width:20rem;
+}
+
+.line-input{
+    width:20rem;
+}
+
+.btn-primary,
+.btn-primary:active,
+.btn-primary:visited{
+    border-radius:2rem;
+    width:20rem;
+    padding:1rem;
+    color:white;
+    background-color:#393939!important;
+}
+
+.btn-primary:hover{
+    background-color:black!important;
 }
