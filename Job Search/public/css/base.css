@@ -16,6 +16,13 @@ h1{
     justify-content:center;
 }
 
+.form-group{
+    justify-content:center;
+    width:100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .form-row{
     justify-content:center;
     padding-bottom:1rem;
@@ -24,18 +31,45 @@ h1{
 
 .line-input{
     width:20rem;
+    
 }
 
+.block-input{
+    width:20rem;
+    height:12rem;
+}
+
+.btn{
+    border-radius:2rem;
+    padding:1rem;
+}
 .btn-primary,
 .btn-primary:active,
 .btn-primary:visited{
-    border-radius:2rem;
     width:20rem;
-    padding:1rem;
     color:white;
     background-color:#393939!important;
 }
 
+.btn-secondary,
+.btn-seconary:active,
+.btn-secondary:visited{
+    width:10rem;
+    padding:1rem;
+    color:white;
+    background-color:#393939;
+}
+
+.btn-secondary:hover,
 .btn-primary:hover{
     background-color:black!important;
+}
+
+.btn-outline-dark{
+    color:#393939;
+    background-color:white!important;
+}
+
+.btn-outline-dark:hover{
+    color:white;
 }
