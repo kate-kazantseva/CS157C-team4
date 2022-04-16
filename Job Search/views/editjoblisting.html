@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Edit Job Listing</title>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="/css/base.css">
+    </head>
+    <body>
+        <div class="container">
+            <div class="center-box">
+                <h1>Edit job listing</h1>
+                <form  method="PUT" action="/joblisting/edit" name = "joblisting-form" id="joblisting-form">
+                    <div class="form-group">
+                        <label for="jobtitle">Job title</label><br>
+                        <input type="text" name="job_title" id="jobtitle" placeholder="QA Engineer" required class="line-input"/><br>
+                    </div>
+                    <div class="form-group">
+                        <label for="salary-type">Salary type</label><br>
+                        <input type="radio" name ="salary_type" id="hourly" value="hr"/>
+                        <label for="hourly">Hourly</label>
+                        <input type="radio" name ="salary_type" id="annual"  value="yr"/>
+                        <label for="annual">Annual</label><br>
+                    </div>
+                    <div class="form-group">
+                        <label for="salary-range">Salary range</label><br>
+                        <input type="number" name ="salary_range_start" id="salaryrange-start" placeholder="Salary range start" class="line-input"/><br>
+                        <input type="number" name="salary_range_end" id="salaryrange-end" placeholder="Salary range end" class="line-input"/><br><br>
+                    </div>
+                    <div class="form-group">
+                        <label for="job-type">Job type</label><br>
+                        <input type="radio" name ="job_type" id="full-time" value="Full-time"/>
+                        <label for="full-time">Full-time</label>
+                        <input type="radio" name ="job_type" id="part-time" n value="Part-time"/>
+                        <label for="part-time">Part-time</label>
+                        <input type="radio" name ="job_type" id="intern" value="Internship"/>
+                        <label for="intern">Internship</label><br>
+                    </div>
+                    <div class="form-group">
+                        <label for="location">Location</label><br>
+                    <input type="text" name="location" id="location" placeholder="San Jose, CA" required class="line-input"/><br>
+                    </div>
+                    <div class="form-group">
+                        <label for="experience">Experience</label><br>
+                        <input type="text" name="experience" id="experience" placeholder="0-2 years" class="line-input"/><br>
+                    </div>
+                    <div class="form-group">
+                        <label for="expiration">Expiration date</label><br>
+                        <input type="date" name="exp_date" id="expiration" required/><br>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Job description</label><br>
+                        <textarea id="description" name="description" placeholder="Join Google's Summer 2022 internship program!" class="block-input"></textarea><br>
+                    </div>
+                    <div class="form-group">
+                        <label for="qualifications_min">Minimum qualifications</label><br>
+                        <textarea id="qualifications-min"  name="m_qualifications" placeholder="Pursuing a Bachelor's in Computer Science or related field." required class="block-input"></textarea><br>
+                    </div>
+                    <div class="form-group">
+                        <label for="qualifications_pref">Preferred qualifications</label><br>
+                        <textarea id="qualifications-pref"  name="p_qualifications" placeholder="Proficient in Python" required class="block-input"></textarea><br>
+                    </div>
+                    
+                    <input type="button"  id="cancel"  value="Cancel" class="btn btn-outline-secondary">
+                    <input type="button"  id="Save"  value="Save" class="btn btn-secondary">
+                    <input type="submit" id="edit"  value="Edit" class="btn btn-secondary btn-outline-dark">
+                    
+                </form>
+            </div>
+       </div>
+    </body>
+</html>

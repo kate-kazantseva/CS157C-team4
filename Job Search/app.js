@@ -68,6 +68,21 @@ app.get('/joblisting/create', function(req, res, next){
   res.sendFile(__dirname + '/views/createjoblisting.html');
 });
 
+// Edit job listing Page
+app.get('/joblisting/edit', function(req, res, next){
+  res.sendFile(__dirname + '/views/editjoblisting.html');
+});
+
+// User settings 
+app.get('/settings', function(req, res, next){
+  res.sendFile(__dirname + '/views/usersettings.html');
+});
+
+// Submit application page
+app.get('/application/create', function(req, res, next){
+  res.sendFile(__dirname + '/views/application-page.html');
+});
+
 //Sign up API
 app.post('/register', async function(req, res, next) {
   try {
