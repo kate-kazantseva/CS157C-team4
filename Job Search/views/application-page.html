@@ -13,7 +13,19 @@
             <div class="center-box">
                 <h1>Application</h1>
                 <h2>Software Engineer at Google</h2>
-                <form  method="POST" action="/application/create" name = "application-form" id="application-form">
+                <form  method="post" action="/application/create" name = "application-form" id="application-form">
+                    <div class="form-group">
+                        <label for="job_id">Job ID</label><br>
+                        <input type="text" name="job_id" id="job_id" placeholder="0000" required class="line-input"/><br>
+                    </div>
+                    <div class="form-group">
+                        <label for="first_name">First name</label><br>
+                        <input type="text" name="first_name" id="first_name" placeholder="John" required class="line-input"/><br>
+                    </div>
+                    <div class="form-group">
+                        <label for="last_name">Last name</label><br>
+                        <input type="text" name="last_name" id="last_name" placeholder="Smith" required class="line-input"/><br>
+                    </div>
                     <div class="form-group">
                         <label for="email">Email</label><br>
                         <input type="text" name="email" id="email" placeholder="example@email.com" required class="line-input"/><br>
@@ -61,16 +73,10 @@
                         </div>
                       </div>
                     
-                    <div class="dropdown">
-                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="education" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          Highest Education
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                          <a class="dropdown-item" href="#">Bachelors</a>
-                          <a class="dropdown-item" href="#">Masters</a>
-                          <a class="dropdown-item" href="#">High school</a>
-                        </div>
-                      </div>
+                      <div class="form-group">
+                        <label for="education"> Highest Education </label><br>
+                        <input type="text" name="education" id="education" placeholder="For eg. Bachelors" required class="line-input"/><br>
+                    </div>
                       <div class="form-group">
                         <label for="major"> Major </label><br>
                         <input type="text" name="major" id="major" placeholder="For eg. Computer Science" required class="line-input"/><br>

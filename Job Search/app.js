@@ -83,6 +83,11 @@ app.get('/application/create', function(req, res, next){
   res.sendFile(__dirname + '/views/application-page.html');
 });
 
+// edit job listing page
+app.get('/joblisting/edit/:id', function(req, res, next){
+  console.log('path params is ', req.params.id);
+});
+
 //Sign up API
 app.post('/register', async function(req, res, next) {
   try {
@@ -151,6 +156,44 @@ app.post('/login', async function(req, res){
   } catch (err) {
     console.log(err);
   }
+});
+
+// create application API
+app.post('/application/create', function(req,res,next){
+  const {job_id,first_name, last_name, email, phone, resume, cv,title,start_date,end_date,description,
+    company_name,education,major,grad_date,today_date} = req.body;
+    client.hSet(job_id+"_"+last_name,[
+      'first_name',first_name,
+      'last_name',last_name,
+      'email',email,
+      'phone',phone,
+      'resume',resume,
+      'cv',cv,
+      'title',title,
+      'start_date',start_date,
+      'end_date',end_date,
+      'description',description,
+      'company_name',company_name,
+      'education',education,
+      'major',major,
+      'grad_date',grad_date,
+      'today_date',today_date
+    ], function(err, reply){
+      if(err){
+        console.log(err);
+      }
+      console.log(reply);
+      res.redirect('/homepage');
+    });
+
+});
+
+// edit job listing API
+app.post('/joblisting/edit/:id', function(req,res,next){ 
+  client.hSet(req.params.id,req.body);
+  res.redirect('/homepage');
+  console.log('updated');
+
 });
 
 app.get('/logout', function (req, res){
