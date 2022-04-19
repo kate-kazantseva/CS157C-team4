@@ -12,7 +12,11 @@
         <div class="container">
             <div class="center-box">
                 <h1>Create job listing</h1>
-                <form  method="POST" action="/joblisting/create" name = "joblisting-form" id="joblisting-form">
+                <form  method="post" action="/joblisting/create/" onsubmit="this.action = this.action + this.job_id.value; this.submit();" name = "joblisting-form" id="joblisting-form">
+                    <div class="form-group">
+                        <label for="job_id">Job ID</label><br>
+                        <input type="text" name="job_id" id="job_id" placeholder="000" required class="line-input"/><br>
+                    </div>
                     <div class="form-group">
                         <label for="jobtitle">Job title</label><br>
                         <input type="text" name="job_title" id="jobtitle" placeholder="QA Engineer" required class="line-input"/><br>

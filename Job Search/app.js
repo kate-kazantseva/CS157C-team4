@@ -88,6 +88,11 @@ app.get('/joblisting/edit/:id', function(req, res, next){
   console.log('path params is ', req.params.id);
 });
 
+// create job listing page
+app.get('/joblisting/create/:id', function(req, res, next){
+  console.log('path params is ', req.params.id);
+});
+
 //Sign up API
 app.post('/register', async function(req, res, next) {
   try {
@@ -193,6 +198,14 @@ app.post('/joblisting/edit/:id', function(req,res,next){
   client.hSet(req.params.id,req.body);
   res.redirect('/homepage');
   console.log('updated');
+
+});
+
+// create job listing API
+app.post('/joblisting/create/:id', function(req,res,next){ 
+  client.hSet(req.params.id,req.body);
+  res.redirect('/homepage');
+  console.log('created');
 
 });
 
