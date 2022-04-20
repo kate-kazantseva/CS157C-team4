@@ -65,32 +65,38 @@ app.get("/homepage", function (req, res) {
 
 // Create job listing Page
 app.get('/joblisting/create', function(req, res, next){
-  res.sendFile(__dirname + '/views/createjoblisting.html');
+  if (req.user) {
+    res.sendFile(__dirname + '/views/createjoblisting.html');
+  } else {
+    res.redirect('login');
+  }
 });
 
 // Edit job listing Page
 app.get('/joblisting/edit', function(req, res, next){
-  res.sendFile(__dirname + '/views/editjoblisting.html');
+  if (req.user) {
+    res.sendFile(__dirname + '/views/editjoblisting.html');
+  } else {
+    res.redirect('login');
+  }
 });
 
 // User settings 
 app.get('/settings', function(req, res, next){
-  res.sendFile(__dirname + '/views/usersettings.html');
+  if (req.user) {
+    res.sendFile(__dirname + '/views/usersettings.html');
+  } else {
+    res.redirect('login');
+  }
 });
 
 // Submit application page
 app.get('/application/create', function(req, res, next){
-  res.sendFile(__dirname + '/views/application-page.html');
-});
-
-// edit job listing page
-app.get('/joblisting/edit/:id', function(req, res, next){
-  console.log('path params is ', req.params.id);
-});
-
-// create job listing page
-app.get('/joblisting/create/:id', function(req, res, next){
-  console.log('path params is ', req.params.id);
+  if (req.user) {
+    res.sendFile(__dirname + '/views/application-page.html');
+  } else {
+    res.redirect('login');
+  }
 });
 
 //Sign up API
@@ -111,8 +117,6 @@ app.post('/register', async function(req, res, next) {
     //encrypt password
     encr_pword = await bcrypt.hash(password, 10);
     
-    client.hSet(email.toLowerCase(), 'password', encr_pword);
-
     user = {
       'first_name': first_name,
       'last_name': last_name,
@@ -122,6 +126,8 @@ app.post('/register', async function(req, res, next) {
       'type': type,
     };
 
+    //client.json.set(email.toLowerCase(), '$', user); //TODO: refactor sign up/login to use JSON
+    client.hSet(email.toLowerCase(), ['password', encr_pword]);
     res.redirect('login');
     
   } catch (err) {
@@ -165,32 +171,24 @@ app.post('/login', async function(req, res){
 
 // create application API
 app.post('/application/create', function(req,res,next){
-  const {job_id,first_name, last_name, email, phone, resume, cv,title,start_date,end_date,description,
-    company_name,education,major,grad_date,today_date} = req.body;
-    client.hSet(job_id+"_"+last_name,[
-      'first_name',first_name,
-      'last_name',last_name,
-      'email',email,
-      'phone',phone,
-      'resume',resume,
-      'cv',cv,
-      'title',title,
-      'start_date',start_date,
-      'end_date',end_date,
-      'description',description,
-      'company_name',company_name,
-      'education',education,
-      'major',major,
-      'grad_date',grad_date,
-      'today_date',today_date
-    ], function(err, reply){
-      if(err){
+    const {job_id, email} = req.body;
+    client.json.set(job_id+"_"+email, "$", req.body).then(function(err, reply) {
+      if (err) {
         console.log(err);
       }
-      console.log(reply);
-      res.redirect('/homepage');
     });
+    res.redirect('/homepage');
+});
 
+// create job listing API
+app.post('/joblisting/create', async function(req,res,next){
+    var job_id;
+    do {
+      job_id = "job"+Math.floor(Math.random() * 1000000);
+      var result = await client.json.get(job_id);
+    } while (result)
+    client.json.set(job_id ,"$" ,req.body);
+    res.redirect('/homepage');
 });
 
 // edit job listing API
@@ -198,15 +196,6 @@ app.post('/joblisting/edit/:id', function(req,res,next){
   client.hSet(req.params.id,req.body);
   res.redirect('/homepage');
   console.log('updated');
-
-});
-
-// create job listing API
-app.post('/joblisting/create/:id', function(req,res,next){ 
-  client.hSet(req.params.id,req.body);
-  res.redirect('/homepage');
-  console.log('created');
-
 });
 
 app.get('/logout', function (req, res){
