@@ -117,11 +117,11 @@ app.post('/register', async function(req, res, next) {
       return res.status(400).send("Some fields are missing.");
     }
     //check for existing user
-    client.hGetAll(email.toLowerCase(), function(result) {
-      if (result) {
-        return res.status(409).send("User with this email already has an account.");
-      }
-    });
+    result = await client.json.get(email.toLowerCase())
+    console.log(result);
+    if (result) {
+      return res.status(409).send("User with this email already has an account.");
+    }
 
     //encrypt password
     encr_pword = await bcrypt.hash(password, 10);
@@ -135,8 +135,7 @@ app.post('/register', async function(req, res, next) {
       'type': type,
     };
 
-    //client.json.set(email.toLowerCase(), '$', user); //TODO: refactor sign up/login to use JSON
-    client.hSet(email.toLowerCase(), ['password', encr_pword]);
+    client.json.set(email.toLowerCase(), '$', user);
     res.redirect('login');
     
   } catch (err) {
@@ -152,7 +151,8 @@ app.post('/login', async function(req, res){
     if (!(email && password)) {
       return res.status(400).send("Some fields are missing.");
     }
-    client.hGetAll(email.toLowerCase()).then(function(user) {
+
+    client.json.get(email.toLowerCase()).then(function(user) {
       if (Object.prototype.hasOwnProperty.call(user, 'password')) {
         bcrypt.compare(password, user.password).then(function(correct) {
           if (correct) {
@@ -165,7 +165,11 @@ app.post('/login', async function(req, res){
             );
             user.email = email;
             authTokens[token] = user;
-            res.cookie('AuthToken', token);
+            res.cookie('AuthToken', token)
+            res.cookie('UserFirstName', user.first_name);
+            res.cookie('UserLastName', user.last_name);
+            res.cookie('UserEmail', user.email);
+            res.cookie('UserOrg/School', user.school);
             res.redirect('homepage');
           } else 
           return res.status(400).send("Incorrect password.");
