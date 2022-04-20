@@ -12,8 +12,19 @@ h1{
 
 .container{
     display:flex;
-    align-items:center;
+    align-items:flex-start;
     justify-content:center;
+}
+
+.item{
+    padding:0.5rem;
+    border-style:solid;
+    border-width:0.15rem;
+    border-color:#070707;
+    border-radius:1rem;
+    margin-bottom:0.75rem;
+    word-wrap:break-word;
+    width:30rem;
 }
 
 .form-group{

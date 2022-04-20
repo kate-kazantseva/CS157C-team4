@@ -81,6 +81,15 @@ app.get('/joblisting/edit', function(req, res, next){
   }
 });
 
+// Saved jobs listing Page
+app.get('/savedjobs', function(req, res, next){
+  if (req.user) {
+    res.sendFile(__dirname + '/views/savedjobs.html');
+  } else {
+    res.redirect('login');
+  }
+});
+
 // User settings 
 app.get('/settings', function(req, res, next){
   if (req.user) {

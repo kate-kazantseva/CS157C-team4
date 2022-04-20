@@ -1,6 +1,6 @@
 .dashboard{
     display:flex;
-    align-items:center;
+    align-items:flex-start;
     justify-content:center;
     padding:2rem;
 }
@@ -22,6 +22,7 @@
     border-width:0.15rem;
     border-color:#070707;
     border-radius:1rem;
+    word-wrap:break-word;
     width:100%;
 }
 

@@ -20,7 +20,7 @@
             <a class="nav-link" href="#">Jobs</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Saved Jobs</a>
+            <a class="nav-link" href="/savedjobs">Saved Jobs</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Recently Applied</a>
@@ -42,25 +42,25 @@
     </div>
     
     <div class="dashboard">
-      <div class="dash-panel">
+      <div class="dash-panel" id="joblistings">
         <!-- Loop through 10 jobs -->
         <h3>Jobs</h3> <a class="view-all" href="">View all</a>
-        <div class="panel-item">
+        <div class="panel-item" id="joblisting">
           job listing
         </div>
       </div>
-      <div class="dash-panel">
+      <div class="dash-panel" id="savedjobs">
         <!-- Loop through 10 saved jobs-->
         <!-- Replace with link to saved jobs page -->
-        <h3>Saved Jobs</h3> <a class="view-all" href="">View all</a>
-        <div class="panel-item">
+        <h3>Saved Jobs</h3> <a class="view-all" href="savedjobs">View all</a>
+        <div class="panel-item" id="savedjob">
           saved job listing
         </div>
       </div>
-      <div class="dash-panel">
+      <div class="dash-panel" id="applications">
         <h3>Recently applied</h3> 
         <!-- Loop through 3 recent applications -->
-        <div class="panel-item">
+        <div class="panel-item" id="application">
           application
         </div>
       </div>
