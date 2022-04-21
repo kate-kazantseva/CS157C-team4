@@ -90,6 +90,16 @@ app.get('/savedjobs', function(req, res, next){
   }
 });
 
+// Job Search Page
+app.get('/job_search', function(req, res, next){
+  //Outputs all jobs for now, no search
+  if (req.user) {
+    res.sendFile(__dirname + '/views/job_search_page.html');
+  } else {
+    res.redirect('login');
+  }
+});
+
 // User settings 
 app.get('/settings', function(req, res, next){
   if (req.user) {
@@ -118,7 +128,6 @@ app.post('/register', async function(req, res, next) {
     }
     //check for existing user
     result = await client.json.get(email.toLowerCase())
-    console.log(result);
     if (result) {
       return res.status(409).send("User with this email already has an account.");
     }
@@ -201,6 +210,7 @@ app.post('/joblisting/create', async function(req,res,next){
       var result = await client.json.get(job_id);
     } while (result)
     client.json.set(job_id ,"$" ,req.body);
+    client.sAdd("joblist", job_id);
     res.redirect('/homepage');
 });
 
@@ -212,12 +222,65 @@ app.post('/joblisting/edit/:id', function(req,res,next){
 });
 
 app.get('/logout', function (req, res){
-    authTokens[req.cookies['AuthToken']] = null;
-    res.redirect('login');
+  authTokens[req.cookies['AuthToken']] = null;
+  res.redirect('login');
+});
+
+app.get('/jobs', async function (req, res) {
+  //TODO: check if applied
+  results = await client.sScan("joblist", 0, {"MATCH": "job*"});
+  job_list = [];
+  user = await client.json.get(decodeURI(req.cookies['UserEmail']));
+  for (i in results.members) {
+    job = await client.json.get(results.members[i]);
+    job.job_id = results.members[i];
+    job.saved = false;
+    for (k in user.saved_jobs) {
+      if (user.saved_jobs[k].job_id == job.job_id) {
+        job.saved = true;
+        break;
+      }
+    }
+    job_list.push(job);
+  }
+  res.setHeader('content-type', 'application/json');
+  res.status(200).send(job_list);
+});
+
+app.post('/save_job', async function (req, res) {
+  check = await client.json.get(decodeURI(req.cookies['UserEmail']));
+  if (check.saved_jobs == null) {
+    client.json.set(decodeURI(req.cookies['UserEmail']), "$.saved_jobs", [req.body]);
+  } else client.json.arrAppend(decodeURI(req.cookies['UserEmail']), "$..saved_jobs", req.body);
+  res.status(201);
+  res.send();
+});
+
+app.delete('/save_job', async function (req, res) {
+  user = await client.json.get(decodeURI(req.cookies['UserEmail']));
+  for (i in user.saved_jobs) {
+    if (user.saved_jobs[i].job_id == req.body.job_id) {
+      client.json.arrPop(decodeURI(req.cookies['UserEmail']), "$.saved_jobs", i);
+      res.status(200).send();
+    }
+  }
+  res.status(400).send();
+});
+
+app.get('/saved_jobs', async function (req, res) {
+  user = await client.json.get(decodeURI(req.cookies['UserEmail']));
+  res.setHeader('content-type', 'application/json');
+  res.status(200).send(user.saved_jobs);
+});
+
+app.get('/user', async function (req, res) {
+  user = await client.json.get(decodeURI(req.cookies['UserEmail']));
+  res.setHeader('content-type', 'application/json');
+  res.status(200).send(user);
 });
 
 app.listen(port, function(){
-    console.log('Server started on port '+port);
+    console.log('Server started on port ' + port);
   });
 
 client.on('connect', function(){
