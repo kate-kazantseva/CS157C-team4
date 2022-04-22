@@ -1,0 +1,16 @@
+.search-block{
+    padding-top:1rem;
+
+}
+
+.search-item{
+    margin:0rem 0.5rem 0rem 0.5rem;
+}
+
+.btn-secondary{
+    all:none!important;
+    width:10rem;
+    padding:0.25rem;
+    border-radius:1rem;
+    background-color:#393939;
+}

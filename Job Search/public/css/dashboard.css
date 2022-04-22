@@ -1,26 +1,29 @@
 .dashboard{
     display:flex;
     align-items:flex-start;
-    justify-content:center;
     padding:2rem;
 }
 
 .dash-panel{
     display:flex;
+    align-content:flex-start;
     flex-wrap:wrap;
+    overflow: auto;
     width:33%;
+    height:35rem;
     margin:1rem;
     padding:1rem;
     border-style:solid;
     border-width:0.1rem;
-    border-color:#070707;
+    border-color:lightgray;
 }
 
 .panel-item{
+    margin-bottom:1rem;
     padding:0.5rem;
     border-style:solid;
     border-width:0.15rem;
-    border-color:#070707;
+    border-color:#393939;
     border-radius:1rem;
     word-wrap:break-word;
     width:100%;
@@ -31,7 +34,7 @@
 }
 
 h3{
-    color:#070707;
+    color:#393939;
     font-size:24px;
 }
 
@@ -41,7 +44,7 @@ a.recruiter-tool:hover,
 a.recruiter-tool:active{
     width:100%;
     margin-bottom:0.75rem;
-    color:#070707;
+    color:#393939;
     text-decoration:none!important;
 }
 
@@ -49,7 +52,7 @@ a.view-all:link,
 a.view-all:visited,
 a.view-all:hover,
 a.view-all:active{
-    color:#070707;
+    color:#393939;
     margin-left:auto;
     text-decoration:underline;
 }
