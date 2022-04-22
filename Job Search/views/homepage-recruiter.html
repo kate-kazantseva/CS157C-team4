@@ -26,13 +26,10 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-            <a class="nav-link" href="#">Jobs</a>
+            <a class="nav-link" href="/joblisting/create">Create job listing</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/savedjobs">Saved Jobs</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Recently Applied</a>
+            <a class="nav-link" href="#">Applications</a>
           </li>
           <li class="nav-item">
             <!-- Replace with search icon-->
@@ -61,17 +58,24 @@
       <div class="dash-panel" id="savedjobs">
         <!-- Loop through 10 saved jobs-->
         <!-- Replace with link to saved jobs page -->
-        <h3>Saved Jobs</h3> <a class="view-all" href="savedjobs">View all</a>
+        <h3>Inbox</h3> <a class="view-all" href="/viewapplications">View all</a>
         <div class="panel-item" id="savedjob">
-          saved job listing
+          application
         </div>
       </div>
       <div class="dash-panel" id="applications">
-        <h3>Recently applied</h3> 
+        <h3>Recruiter tools</h3> 
         <!-- Loop through 3 recent applications -->
-        <div class="panel-item" id="application">
-          application
-        </div>
+        <a class="recruiter-tool" href="/joblisting/create">
+            <div class="panel-item tool-panel" id="createjl">
+            Create job listing
+            </div>
+        </a>
+        <a class ="recruiter-tool" href="/viewapplications">
+            <div class="panel-item tool-panel" id="viewapps">
+            View applications
+            </div>
+        </a>
       </div>
     </div>
     </form>

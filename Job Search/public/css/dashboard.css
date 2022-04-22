@@ -26,9 +26,23 @@
     width:100%;
 }
 
+.tool-panel{
+    padding:2rem;
+}
+
 h3{
     color:#070707;
     font-size:24px;
+}
+
+a.recruiter-tool:link,
+a.recruiter-tool:visited,
+a.recruiter-tool:hover,
+a.recruiter-tool:active{
+    width:100%;
+    margin-bottom:0.75rem;
+    color:#070707;
+    text-decoration:none!important;
 }
 
 a.view-all:link,

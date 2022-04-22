@@ -55,13 +55,20 @@ app.get('/', function(req, res, next){
     res.sendFile(__dirname + '/views/register.html');
 });
 
+
 app.get("/homepage", function (req, res) {
-  if (req.user) {
-    res.sendFile(__dirname + '/views/homepage.html');
+  if (req.user.type == "student") {
+    res.sendFile(__dirname + '/views/homepage-student.html');
+  }
+  else if(req.user.type == "recruiter"){
+    res.sendFile(__dirname + '/views/homepage-recruiter.html');
   } else {
     res.redirect('login');
   }
 });
+
+
+
 
 // Create job listing Page
 app.get('/joblisting/create', function(req, res, next){
