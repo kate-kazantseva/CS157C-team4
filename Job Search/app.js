@@ -109,9 +109,13 @@ app.get('/job_search', function(req, res, next){
 
 // User settings 
 app.get('/settings', function(req, res, next){
-  if (req.user) {
-    res.sendFile(__dirname + '/views/usersettings.html');
-  } else {
+  if (req.user.type == "student") {
+    res.sendFile(__dirname + '/views/usersettings-student.html');
+  }
+  else if(req.user.type == "recruiter"){
+    res.sendFile(__dirname + '/views/usersettings-recruiter.html');
+  }
+  else {
     res.redirect('login');
   }
 });
