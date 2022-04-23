@@ -2,13 +2,15 @@
 <html lang="en">
     <head>
         <script>
-            fetch('/saved_jobs').then(res => res.json()).then(json => {
+            fetch('/submitted_apps').then(res => res.json()).then(json => {
                 json.forEach(element => {
+                    for (var key in element){
                     const newDiv = document.createElement("div");
-                    const content = document.createTextNode(element.job_title);
+                    const content = document.createTextNode(key);
                     newDiv.appendChild(content);
-                    const container = document.getElementById("savedjobs");
+                    const container = document.getElementById("submittedjobs");
                     container.appendChild(newDiv);
+                    }
                 });
             });
         </script>
@@ -17,7 +19,7 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="/css/base.css">
-        <title>Saved Jobs</title>
+        <title>Recently Applied</title>
     </head>
     <body>
         <div class="navbar navbar-expand-lg navbar-dark bg-dark" role="navigation">
@@ -47,10 +49,9 @@
               </ul>
             </div>
         </div>
-        
         <div class="container">
-            <div class="center-box" id="savedjobs">
-                <h1>Saved Jobs</h1>
+            <div class="center-box" id="submittedjobs">
+                <h1>Recently Applied</h1>
             </div>
             
         </div>

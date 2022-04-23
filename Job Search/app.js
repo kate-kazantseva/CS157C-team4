@@ -97,6 +97,15 @@ app.get('/savedjobs', function(req, res, next){
   }
 });
 
+// Recently applied job listings Page
+app.get('/recently_applied', function(req, res, next){
+  if (req.user) {
+    res.sendFile(__dirname + '/views/recently_applied.html');
+  } else {
+    res.redirect('login');
+  }
+});
+
 // Job Search Page
 app.get('/job_search', function(req, res, next){
   //Outputs all jobs for now, no search
@@ -208,6 +217,23 @@ app.post('/application/create', async function(req,res,next){
   if (check.app_info == null) {
     client.json.set(decodeURI(req.cookies['UserEmail']), "$.app_info", req.body);
   } 
+
+  // change job_id, need to fetch it from listing (cookie)
+  var job_id;
+  job_id = "job"+Math.floor(Math.random() * 1000000);
+
+  var x = {
+ };
+  x[job_id] = req.body  
+  if(check.submitted_apps == null){
+  client.json.set(decodeURI(req.cookies['UserEmail']), "$.submitted_apps", [x])
+  }else{
+    client.json.arrAppend(decodeURI(req.cookies['UserEmail']), "$..submitted_apps", x)
+
+  }
+
+
+  
   res.status(201);
   res.redirect('/homepage');
 });
@@ -281,6 +307,12 @@ app.get('/saved_jobs', async function (req, res) {
   user = await client.json.get(decodeURI(req.cookies['UserEmail']));
   res.setHeader('content-type', 'application/json');
   res.status(200).send(user.saved_jobs);
+});
+
+app.get('/submitted_apps', async function (req, res) {
+  user = await client.json.get(decodeURI(req.cookies['UserEmail']));
+  res.setHeader('content-type', 'application/json');
+  res.status(200).send(user.submitted_apps);
 });
 
 app.get('/app_info', async function (req, res) {
