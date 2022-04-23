@@ -7,9 +7,12 @@
                 json.forEach((element, i) => {
                     const newDiv = document.createElement("div");
                     newDiv.id = i;
+                    newDiv.classList.add("joblisting")
                     const content = document.createTextNode(element.job_title);
                     newDiv.appendChild(content);
+
                     const save_button = document.createElement("button");
+                    save_button.classList.add("btn-success");
                     if (!element.saved)
                         save_button.innerHTML = "Save Job";
                     else
@@ -29,6 +32,46 @@
                                                                      { save_button.innerHTML = "Save Job";}});
                         }
                     });
+                    // display job listing info
+                    newDiv.addEventListener("click",function() {
+                      var full_info = document.getElementById('view-job');
+                      full_info.innerHTML = "";
+                      var h3 = document.createElement('h3');
+                      var title = document.createTextNode(element.job_title);
+                      h3.appendChild(title);
+                      full_info.appendChild(h3);
+                      // apply button
+                      const apply_button = document.createElement("button");
+                      apply_button.classList.add("btn-primary");
+                      apply_button.innerHTML = "Apply";
+                      full_info.appendChild(apply_button);
+                      full_info.appendChild(document.createElement("br"));
+                      // job info
+                      var sal = document.createTextNode("Salary range: " + element.salary_range_start +  " - " + element.salary_range_end + " per " + element.salary_type);
+                      full_info.appendChild(sal);
+                      full_info.appendChild(document.createElement("br"));
+                      var jbtype = document.createTextNode("Job type: " + element.job_type);
+                      full_info.appendChild(jbtype);
+                      full_info.appendChild(document.createElement("br"));
+                      var loc = document.createTextNode("Location: " + element.location);
+                      full_info.appendChild(loc);
+                      full_info.appendChild(document.createElement("br"));
+                      var exp = document.createTextNode("Experience: " + element.experience);
+                      full_info.appendChild(exp);
+                      full_info.appendChild(document.createElement("br"));
+                      var desc = document.createTextNode("Description: " + element.description);
+                      full_info.appendChild(desc);
+                      full_info.appendChild(document.createElement("br"));
+                      var minq = document.createTextNode("Minimum Qualifications: " + element.m_qualifications);
+                      full_info.appendChild(minq);
+                      full_info.appendChild(document.createElement("br"));
+                      var prefq = document.createTextNode("Preferred Qualifications: " + element.p_qualifications);
+                      full_info.appendChild(prefq);
+                      full_info.appendChild(document.createElement("br"));
+                      var expiration = document.createTextNode("Expiration date: " + element.exp_date);
+                      full_info.appendChild(expiration);
+                      full_info.appendChild(document.createElement("br"));
+                    });
                     newDiv.appendChild(save_button);
                     const container = document.getElementById("jobs");
                     container.appendChild(newDiv);
@@ -39,7 +82,7 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="/css/base.css">
-        <link rel="stylesheet" type="text/css" href="/css/dashboard.css">
+        <link rel="stylesheet" type="text/css" href="/css/search.css">
         <title>Search</title>
     </head>
     <body>
@@ -70,13 +113,60 @@
               </ul>
             </div>
         </div>
-      
-        </div>
-          <div class="container">
-            <div class="center-box" id="jobs">
-            </div>
-        </div>
         
+        </div>
 
+        <h1>Search jobs</h1>
+        <!-- Search bar-->
+        <form action="#">
+          <div class="form-group row search-block">
+            <div class="col-xs-4 search-item">
+              <input type="text" name="search" class="form-control search-item" id="search" placeholder="Job title" aria-label="Search">
+            </div>
+            <div class="col-xs-2 search-item">
+              <select class="custom-select" id="salary" name="salary" aria-label="Salary">
+                <option value="none">Salary range</option>
+                <option value="min10-max30">$10,000-$30,000</option>
+                <option value="min30-max-50">$30,000-$50,000</option>
+                <option value="min50-max-80">$50,000-$80,000</option>
+                <option value="min80-max-100">$80,000-$100,000</option>
+                <option value="over-100">$100,000+</option>
+              </select>
+            </div>
+            <div class="col-xs-2 search-item">
+              <select class="custom-select" id="job-type" name="job-type" aria-label="Job type">
+                <option value="none">Job type</option>
+                <option value="internship">Internship</option>
+                <option value="parttime">Part time</option>
+                <option value="fulltime">Full time</option>
+              </select>
+            </div>
+            <div class="col-xs-2 search-item">
+              <input type="text" class="form-control" name="location" id="location" placeholder="Location" aria-label="Location">
+            </div>
+            <div class="col-xs-2 search-item">
+              <select class="custom-select" id="experience" name="experience" aria-label="Experience">
+                <option value="none">Job type</option>
+                <option value="1yr">0-1 year</option>
+                <option value="3yr">1-3 years</option>
+                <option value="5yr">3-5 years</option>
+                <option value="5yr-plus">5+ years</option>
+              </select>
+            </div>
+            <div class="col-xs-2 search-item">
+              <button class="btn-secondary" type="submit" value="Search">Find jobs</button>
+            </div>
+          </div>
+        </form>
+
+        <!--Jobs-->
+        <div class="container">
+          <div class="jobs-container" id="jobs">
+
+          </div>
+          <div class="view-job" id="view-job">
+
+          </div>
+        </div>
     </body>
 </html>
