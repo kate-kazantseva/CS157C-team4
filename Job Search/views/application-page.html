@@ -1,6 +1,39 @@
 <!doctype html>
 <html lang="en">
     <head>
+        <script>
+            fetch('/app_info').then(res => res.json()).then(json => {
+                const first_name = document.getElementById("first_name")
+                first_name.value = json.first_name
+                const last_name = document.getElementById("last_name")
+                last_name.value = json.last_name
+                const email = document.getElementById("email")
+                email.value = json.email
+                const phone = document.getElementById("phone")
+                phone.value = json.phone
+                const resume = document.getElementById("resume")
+                resume.value = json.resume
+                const cv = document.getElementById("cv")
+                cv.value = json.cv
+                const title = document.getElementById("title")
+                title.value = json.title
+                const company_name = document.getElementById("company_name")
+                company_name.value = json.title
+                const start_date = document.getElementById("start_date")
+                start_date.value = json.start_date
+                const end_date = document.getElementById("end_date")
+                end_date.value = json.end_date
+                const description = document.getElementById("description")
+                description.value = json.description
+                const education = document.getElementById("education")
+                education.value = json.education
+                const major = document.getElementById("major")
+                major.value = json.major
+                const grad_date = document.getElementById("grad_date")
+                grad_date.value = json.grad_date
+               
+      });
+        </script>
         <title>Application</title>
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
@@ -14,10 +47,10 @@
                 <h1>Application</h1>
                 <h2>Software Engineer at Google</h2>
                 <form  method="post" action="/application/create" name = "application-form" id="application-form">
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="job_id">Job ID</label><br>
                         <input type="text" name="job_id" id="job_id" placeholder="0000" required class="line-input"/><br>
-                    </div>
+                    </div> -->
                     <div class="form-group">
                         <label for="first_name">First name</label><br>
                         <input type="text" name="first_name" id="first_name" placeholder="John" required class="line-input"/><br>

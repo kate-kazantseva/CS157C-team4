@@ -109,9 +109,13 @@ app.get('/job_search', function(req, res, next){
 
 // User settings 
 app.get('/settings', function(req, res, next){
-  if (req.user) {
-    res.sendFile(__dirname + '/views/usersettings.html');
-  } else {
+  if (req.user.type == "student") {
+    res.sendFile(__dirname + '/views/usersettings-student.html');
+  }
+  else if(req.user.type == "recruiter"){
+    res.sendFile(__dirname + '/views/usersettings-recruiter.html');
+  }
+  else {
     res.redirect('login');
   }
 });
@@ -199,14 +203,13 @@ app.post('/login', async function(req, res){
 });
 
 // create application API
-app.post('/application/create', function(req,res,next){
-    const {job_id, email} = req.body;
-    client.json.set(job_id+"_"+email, "$", req.body).then(function(err, reply) {
-      if (err) {
-        console.log(err);
-      }
-    });
-    res.redirect('/homepage');
+app.post('/application/create', async function(req,res,next){
+  check = await client.json.get(decodeURI(req.cookies['UserEmail']));
+  if (check.app_info == null) {
+    client.json.set(decodeURI(req.cookies['UserEmail']), "$.app_info", req.body);
+  } 
+  res.status(201);
+  res.redirect('/homepage');
 });
 
 // create job listing API
@@ -278,6 +281,12 @@ app.get('/saved_jobs', async function (req, res) {
   user = await client.json.get(decodeURI(req.cookies['UserEmail']));
   res.setHeader('content-type', 'application/json');
   res.status(200).send(user.saved_jobs);
+});
+
+app.get('/app_info', async function (req, res) {
+  user = await client.json.get(decodeURI(req.cookies['UserEmail']));
+  res.setHeader('content-type', 'application/json');
+  res.status(200).send(user.app_info);
 });
 
 app.get('/user', async function (req, res) {
