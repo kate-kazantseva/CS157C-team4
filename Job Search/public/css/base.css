@@ -20,7 +20,7 @@ h1{
     padding:0.5rem;
     border-style:solid;
     border-width:0.15rem;
-    border-color:#070707;
+    border-color:#393939;
     border-radius:1rem;
     margin-bottom:0.75rem;
     word-wrap:break-word;
@@ -87,6 +87,8 @@ h1{
 
 .btn-outline-light,
 .btn-outline-light:visited{
-    padding:0rem 0.5rem 0rem 0.5rem;
+    width:5rem;
+    height:1.5rem;
+    padding:0rem 0.25rem 0rem 0.25rem;
     margin-top:0.5rem;
 }
