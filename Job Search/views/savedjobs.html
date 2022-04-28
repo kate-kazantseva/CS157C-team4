@@ -5,8 +5,12 @@
             fetch('/saved_jobs').then(res => res.json()).then(json => {
                 json.forEach(element => {
                     const newDiv = document.createElement("div");
-                    const content = document.createTextNode(element.job_title);
-                    newDiv.appendChild(content);
+                    const link = document.createElement("a")
+                    link.setAttribute("href","#")
+                    link.innerText = element.job_title
+                    //const content = document.createTextNode(element.job_title);
+                    //link.appendChild(content);
+                    newDiv.appendChild(link);
                     const container = document.getElementById("savedjobs");
                     container.appendChild(newDiv);
                 });

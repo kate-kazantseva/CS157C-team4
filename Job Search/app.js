@@ -138,6 +138,24 @@ app.get('/application/create', function(req, res, next){
   }
 });
 
+// view job description page
+app.get('/jobdescription', function(req, res, next){
+  if (req.user) {
+    res.sendFile(__dirname + '/views/job-description-page.html');
+  } else {
+    res.redirect('login');
+  }
+});
+
+// view job description page
+app.get('/submitted-application', function(req, res, next){
+  if (req.user) {
+    res.sendFile(__dirname + '/views/submitted-application.html');
+  } else {
+    res.redirect('login');
+  }
+});
+
 //Sign up API
 app.post('/register', async function(req, res, next) {
   try {
@@ -248,6 +266,13 @@ app.post('/joblisting/create', async function(req,res,next){
     client.json.set(job_id ,"$" ,req.body);
     client.sAdd("joblist", job_id);
     res.redirect('/homepage');
+});
+
+// get job by job id
+app.get('/job/:id', async function (req, res) {
+  job = await client.json.get(req.params.id);
+  res.setHeader('content-type', 'application/json');
+  res.status(200).send(job);
 });
 
 // edit job listing API
