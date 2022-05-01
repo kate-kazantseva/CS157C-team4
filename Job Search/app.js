@@ -7,6 +7,7 @@ const redis = require('redis');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
+const { SchemaFieldTypes } = require('redis');
 
 // Create Redis Client
 let client = redis.createClient(6973, '127.0.0.1');
@@ -332,6 +333,54 @@ app.get('/saved_jobs', async function (req, res) {
   user = await client.json.get(decodeURI(req.cookies['UserEmail']));
   res.setHeader('content-type', 'application/json');
   res.status(200).send(user.saved_jobs);
+});
+
+// edit job listing API
+app.post('/joblisting/edit/:id', function(req,res,next){ 
+  client.hSet(req.params.id,req.body);
+  res.redirect('/homepage');
+  console.log('updated');
+});
+// get joblistings based on criteria
+app.get('/joblistings/search/:title', async function (req, res) {
+  var exists = new Boolean(false);
+  var index_name = "new_index"
+
+  //check if index already exists
+  try{
+  const check = await client.ft.info(index_name)
+  }catch (err) {
+    console.log(err);
+    exists = true
+  }
+
+  // create serach index
+  if(exists === true){
+  await client.ft.create(index_name, {
+    '$.job_title': {
+      type: SchemaFieldTypes.TEXT,
+      AS: 'job_title'
+    },
+    '$.job_type': {
+      type: SchemaFieldTypes.TEXT,
+      AS: 'job_type'
+    },
+    '$.location': {
+      type: SchemaFieldTypes.TEXT,
+      AS: 'location'
+    }
+  }, {
+    ON: 'JSON',
+    PREFIX: 'job'
+  });
+}
+
+  // query jobs based on title
+  const query = "@job_title:"+req.params.title+"*"
+  result = await client.ft.search(index_name, query);
+  console.log(result)
+  res.setHeader('content-type', 'application/json');
+  res.status(200).send(result);
 });
 
 app.get('/submitted_apps', async function (req, res) {
