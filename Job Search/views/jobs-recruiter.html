@@ -1,25 +1,15 @@
-<!doctype html>
-<html lang="en">
+<html>
     <head>
         <script>
-            fetch('/submitted_apps').then(res => res.json()).then(json => {
-                json.forEach(element => {
-                    for (var key in element){
-                    const newDiv = document.createElement("div");
-                    const content = document.createTextNode(key);
-                    newDiv.appendChild(content);
-                    const container = document.getElementById("submittedjobs");
-                    container.appendChild(newDiv);
-                    }
-                });
-            });
+
         </script>
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="/css/base.css">
-        <title>Recently Applied</title>
+        <link rel="stylesheet" type="text/css" href="/css/dashboard.css">
+        <title>Jobs</title>
     </head>
     <body>
         <div class="navbar navbar-expand-lg navbar-dark bg-dark" role="navigation">
@@ -49,14 +39,6 @@
               </ul>
             </div>
         </div>
-        <h1>Recently Applied</h1>
-        <div class="container">
-            <div class="center-box" id="submittedjobs">
-                
-            </div>
-            
-        </div>
-        
-
+        <h1>Jobs</h1>
     </body>
 </html>
