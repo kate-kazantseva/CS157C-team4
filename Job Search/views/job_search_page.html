@@ -118,7 +118,7 @@
 
         <h1>Search jobs</h1>
         <!-- Search bar-->
-        <form action="#">
+        <form method="get" action="/joblistings/search/" onsubmit="this.action = this.action + this.search.value; this.submit();" name= "jobsearch-form" id="jobsearch-form">
           <div class="form-group row search-block">
             <div class="col-xs-4 search-item">
               <input type="text" name="search" class="form-control search-item" id="search" placeholder="Job title" aria-label="Search">
