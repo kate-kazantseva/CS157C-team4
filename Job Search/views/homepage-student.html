@@ -8,6 +8,96 @@
         const container = document.getElementById("greeting");
         container.appendChild(greeting);
       });
+
+
+      // recently applied
+      fetch('/submitted_apps').then(res => res.json()).then(json => {
+                // most recent records
+                let flag = false;
+                json.reverse();
+                json.forEach((element,i) => {
+                  // display on 3 records
+                  if(flag){
+                    return;
+                  }
+                  if(i>2){
+                    flag = true;
+                    return
+                  }
+                    for (var key in element){
+                    var newDiv = document.createElement("div");
+                    var content = document.createTextNode(key);
+                    var h3 = document.createElement('h5');
+                    h3.appendChild(content)
+                    newDiv.appendChild(h3);
+                    var container = document.getElementById("applications");
+                    container.appendChild(newDiv);
+                    newDiv.classList.add('panel-item')
+                    }
+                });
+            });
+
+      // saved jobs
+      fetch('/saved_jobs').then(res => res.json()).then(json => {
+                let flag = false;
+                json.reverse();
+                json.forEach((element,i) => {
+                  if(flag){
+                    return;
+                  }
+                  if(i>2){
+                    flag = true;
+                    return
+                  }
+                    const newDiv = document.createElement("div");
+                    const link = document.createTextNode(element.job_title)
+                    const loc = document.createTextNode(element.location)
+                    const name = document.createTextNode(element.company_name)
+                    var h3 = document.createElement('h5');
+                    h3.appendChild(link)
+                    newDiv.appendChild(h3);
+                    var h4 = document.createElement('h6')
+                    h4.appendChild(loc)
+                    newDiv.appendChild(h4)
+                    var h4 = document.createElement('h6')
+                    h4.appendChild(name)
+                    newDiv.appendChild(h4)
+                    const container = document.getElementById("savedjobs");
+                    container.appendChild(newDiv);
+                    newDiv.classList.add('panel-item')
+
+                });
+            });
+
+            // jobs
+            fetch('/jobs').then(res => res.json()).then(json => { 
+              let flag = false
+                json.forEach((element, i) => {
+                  if(flag){
+                    return;
+                  }
+                  if(i>9){
+                    flag = true;
+                    return
+                  }
+                  const newDiv = document.createElement("div");
+                    const link = document.createTextNode(element.job_title)
+                    const loc = document.createTextNode(element.location)
+                    const name = document.createTextNode(element.company_name)
+                    var h3 = document.createElement('h5');
+                    h3.appendChild(link)
+                    newDiv.appendChild(h3);
+                    var h4 = document.createElement('h6')
+                    h4.appendChild(loc)
+                    newDiv.appendChild(h4)
+                    var h4 = document.createElement('h6')
+                    h4.appendChild(name)
+                    newDiv.appendChild(h4)
+                    const container = document.getElementById("joblistings");
+                    container.appendChild(newDiv);
+                    newDiv.classList.add('panel-item')
+                  });
+            });
     </script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
@@ -49,26 +139,18 @@
     <div id="greeting"></div>
     <div class="dashboard">
       <div class="dash-panel" id="joblistings">
-        <!-- Loop through 10 jobs -->
-        <h3>Jobs</h3> <a class="view-all" href="">View all</a>
-        <div class="panel-item" id="joblisting">
-          job listing
-        </div>
+        <h3>Jobs</h3> <a class="view-all" href="job_search">View all</a>
+        <br><br>
       </div>
       <div class="dash-panel" id="savedjobs">
-        <!-- Loop through 10 saved jobs-->
-        <!-- Replace with link to saved jobs page -->
         <h3>Saved Jobs</h3> <a class="view-all" href="savedjobs">View all</a>
-        <div class="panel-item" id="savedjob">
-          saved job listing
-        </div>
+        <br><br>
+
       </div>
       <div class="dash-panel" id="applications">
-        <h3>Recently applied</h3> 
-        <!-- Loop through 3 recent applications -->
-        <div class="panel-item" id="application">
-          application
-        </div>
+        <h3>Recently applied</h3> <a class="view-all" href="recently_applied">View all</a>
+        <br><br>
+
       </div>
     </div>
     </form>
