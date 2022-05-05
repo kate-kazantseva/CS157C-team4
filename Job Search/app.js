@@ -245,6 +245,45 @@ app.post('/login', async function(req, res){
   }
 });
 
+// user-settings
+app.post('/settings', async function(req, res){
+  console.log('changing password')
+  try {
+    const { old_password, new_password } = req.body;
+    //validate input
+    if (!(old_password && new_password)) {
+      return res.status(400).send("Some fields are missing.");
+    }
+    data = await client.json.get(decodeURI(req.cookies['UserEmail']));
+
+    client.json.get(data.email.toLowerCase()).then(function(user) {
+      if (Object.prototype.hasOwnProperty.call(user, 'password')) {
+
+        // validate old and new password
+        bcrypt.compare(new_password, user.password).then(async function(check){
+          if(check){
+          return res.status(400).send("Old and new password are same");
+          }
+        else{
+          // validate old password with stored password
+        bcrypt.compare(old_password, user.password).then(async function(correct) {
+          if (correct) {
+            encr_pword = await bcrypt.hash(new_password, 10);
+            client.json.set(decodeURI(req.cookies['UserEmail']), "$.password", encr_pword);
+            res.redirect('homepage');
+          } else 
+          return res.status(400).send("Incorrect old password.");
+        });
+      }
+      })
+      } else
+        return res.status(400).send("User doesn't exist");
+    });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 // create application API
 app.post('/application/create', async function(req,res,next){
   check = await client.json.get(decodeURI(req.cookies['UserEmail']));
@@ -279,6 +318,7 @@ app.post('/joblisting/create', async function(req,res,next){
       job_id = "job"+Math.floor(Math.random() * 1000000);
       var result = await client.json.get(job_id);
     } while (result)
+    console.log(req.body)
     client.json.set(job_id ,"$" ,req.body);
     client.sAdd("joblist", job_id);
     res.redirect('/homepage');
@@ -356,11 +396,12 @@ app.post('/joblisting/edit/:id', function(req,res,next){
   res.redirect('/homepage');
   console.log('updated');
 });
+
 // get joblistings based on criteria
-app.get('/joblistings/search/:title', async function (req, res) {
+app.post('/joblistings/search/', async function (req, res) {
   var exists = new Boolean(false);
   var index_name = "new_index"
-
+console.log(req.body)
   //check if index already exists
   try{
   const check = await client.ft.info(index_name)
@@ -391,7 +432,15 @@ app.get('/joblistings/search/:title', async function (req, res) {
 }
 
   // query jobs based on title
-  const query = "@job_title:"+req.params.title+"*"
+  var query = "@job_title:"+req.body.search+"*"
+  if(req.body.location !== ''){
+    console.log('inside location')
+    query = query + ",@location:"+req.body.location+"*"
+  }
+  if(req.body.type !== ''){
+    console.log('inside job type')
+    query=query+ ",@job_type:"+req.body.type+"*"
+  }
   result = await client.ft.search(index_name, query);
   console.log(result)
   res.setHeader('content-type', 'application/json');
