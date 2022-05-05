@@ -230,6 +230,45 @@ app.post('/login', async function(req, res){
   }
 });
 
+// user-settings
+app.post('/settings', async function(req, res){
+  console.log('changing password')
+  try {
+    const { old_password, new_password } = req.body;
+    //validate input
+    if (!(old_password && new_password)) {
+      return res.status(400).send("Some fields are missing.");
+    }
+    data = await client.json.get(decodeURI(req.cookies['UserEmail']));
+
+    client.json.get(data.email.toLowerCase()).then(function(user) {
+      if (Object.prototype.hasOwnProperty.call(user, 'password')) {
+
+        // validate old and new password
+        bcrypt.compare(new_password, user.password).then(async function(check){
+          if(check){
+          return res.status(400).send("Old and new password are same");
+          }
+        else{
+          // validate old password with stored password
+        bcrypt.compare(old_password, user.password).then(async function(correct) {
+          if (correct) {
+            encr_pword = await bcrypt.hash(new_password, 10);
+            client.json.set(decodeURI(req.cookies['UserEmail']), "$.password", encr_pword);
+            res.redirect('homepage');
+          } else 
+          return res.status(400).send("Incorrect old password.");
+        });
+      }
+      })
+      } else
+        return res.status(400).send("User doesn't exist");
+    });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 // create application API
 app.post('/application/create', async function(req,res,next){
   check = await client.json.get(decodeURI(req.cookies['UserEmail']));
