@@ -416,15 +416,48 @@ console.log(req.body)
   });
 }
 
+
   // query jobs based on title
-  var query = "@job_title:"+req.body.search+"*"
-  if(req.body.location !== ''){
-    console.log('inside location')
-    query = query + ",@location:"+req.body.location+"*"
+  var query =''
+
+  // only title
+  if(req.body.search !== '' & req.body.location === '' & req.body.type === 'none'){
+    query = query+"@job_title:"+req.body.search+"*"
   }
-  if(req.body.type !== 'none'){
-    console.log('inside job type')
-    query=query+ ",@job_type:"+req.body.type+"*"
+
+  // only location
+  if(req.body.search === '' & req.body.location !== '' & req.body.type === 'none'){
+    query = query+"@location:"+req.body.location+"*"
+  }
+
+  //only job type
+  if(req.body.search === '' & req.body.location === '' & req.body.type !== 'none'){
+    query = query+"@job_type:"+req.body.type+"*"
+  }
+
+  //title, location and type
+  if(req.body.search !== '' & req.body.location !== '' & req.body.type !== 'none'){
+    query = query+"@job_title:"+req.body.search+"*"
+    query = query+",@location:"+req.body.location+"*"
+    query = query+",@job_type:"+req.body.type+"*"
+  }
+
+  //location and type
+  if(req.body.search === '' & req.body.location !== '' & req.body.type !== 'none'){
+    query = query+"@location:"+req.body.location+"*"
+    query = query+",@job_type:"+req.body.type+"*"
+  }
+
+  // title and location
+  if(req.body.search !== '' & req.body.location !== '' & req.body.type === 'none'){
+    query = query+"@job_title:"+req.body.search+"*"
+    query = query+",@location:"+req.body.location+"*"
+  }
+
+  // title and type
+  if(req.body.search !== '' & req.body.location === '' & req.body.type !== 'none'){
+    query = query+"@job_title:"+req.body.search+"*"
+    query = query+",@job_type:"+req.body.type+"*"
   }
   result = await client.ft.search(index_name, query);
   console.log(result)
