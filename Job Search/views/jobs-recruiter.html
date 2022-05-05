@@ -1,0 +1,60 @@
+<html>
+    <head>
+        <script>
+        </script>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="/css/base.css">
+        <link rel="stylesheet" type="text/css" href="/css/jobsviewer.css">
+        
+        <title>Jobs</title>
+    </head>
+    <body>
+      <div class="navbar navbar-expand-lg navbar-dark bg-dark" role="navigation">
+        <a class="navbar-brand" href="/homepage">Job Search</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ml-auto">
+  
+              <li class="nav-item">
+                  <a class="nav-link" href="/recruiter/jobs">Jobs</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="/joblisting/create">Create job listing</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="/recruiter/applications">Applications</a>
+              </li>
+              <li class="nav-item">
+                  <!-- Replace with person icon-->
+                  <a class="nav-link" href="/settings">Settings</a>
+              </li>
+              <form class="d-flex" action="/logout">
+                  <button class="btn btn-outline-light" type="submit">Log out</button>
+              </form>
+              </ul>
+          </div>
+      </div>
+      <h1>Jobs</h1>
+      
+      <div class="container">
+        <div class="jobs-container" id="jobs">
+          <div class ="joblisting">
+            job listing
+          </div>
+        </div>
+        <div class="view-job" id="view-job">
+          job title<br>
+          <button class="btn-primary">
+            edit job listing
+          </button>
+          <br>
+          job info
+        </div>
+      </div>
+    </body>
+</html>
