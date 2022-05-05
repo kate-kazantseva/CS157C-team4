@@ -422,7 +422,7 @@ console.log(req.body)
     console.log('inside location')
     query = query + ",@location:"+req.body.location+"*"
   }
-  if(req.body.type !== ''){
+  if(req.body.type !== 'none'){
     console.log('inside job type')
     query=query+ ",@job_type:"+req.body.type+"*"
   }
