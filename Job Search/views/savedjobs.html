@@ -5,7 +5,6 @@
             fetch('/saved_jobs').then(res => res.json()).then(json => {
                 json.forEach(element => {
                     const newDiv = document.createElement("div");
-                    newDiv.classList.add("joblisting")
                     const link = document.createElement("a")
                     link.setAttribute("href","#")
                     link.innerText = element.job_title
@@ -14,47 +13,7 @@
                     newDiv.appendChild(link);
                     const container = document.getElementById("savedjobs");
                     container.appendChild(newDiv);
-                    newDiv.addEventListener("click",function() {
-                      var full_info = document.getElementById('view-job');
-                      full_info.innerHTML = "";
-                      var h3 = document.createElement('h3');
-                      var title = document.createTextNode(element.job_title);
-                      h3.appendChild(title);
-                      full_info.appendChild(h3);
-                      // apply button
-                      const apply_button = document.createElement("button");
-                      apply_button.classList.add("btn-primary");
-                      apply_button.innerHTML = "Apply";
-                      full_info.appendChild(apply_button);
-                      full_info.appendChild(document.createElement("br"));
-                      // job info
-                      var sal = document.createTextNode("Salary range: " + element.salary_range_start +  " - " + element.salary_range_end + " per " + element.salary_type);
-                      full_info.appendChild(sal);
-                      full_info.appendChild(document.createElement("br"));
-                      var jbtype = document.createTextNode("Job type: " + element.job_type);
-                      full_info.appendChild(jbtype);
-                      full_info.appendChild(document.createElement("br"));
-                      var loc = document.createTextNode("Location: " + element.location);
-                      full_info.appendChild(loc);
-                      full_info.appendChild(document.createElement("br"));
-                      var exp = document.createTextNode("Experience: " + element.experience);
-                      full_info.appendChild(exp);
-                      full_info.appendChild(document.createElement("br"));
-                      var desc = document.createTextNode("Description: " + element.description);
-                      full_info.appendChild(desc);
-                      full_info.appendChild(document.createElement("br"));
-                      var minq = document.createTextNode("Minimum Qualifications: " + element.m_qualifications);
-                      full_info.appendChild(minq);
-                      full_info.appendChild(document.createElement("br"));
-                      var prefq = document.createTextNode("Preferred Qualifications: " + element.p_qualifications);
-                      full_info.appendChild(prefq);
-                      full_info.appendChild(document.createElement("br"));
-                      var expiration = document.createTextNode("Expiration date: " + element.exp_date);
-                      full_info.appendChild(expiration);
-                      full_info.appendChild(document.createElement("br"));
-                    })
                 });
-                
             });
         </script>
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -62,7 +21,6 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="/css/base.css">
-        <link rel="stylesheet" type="text/css" href="/css/jobsviewer.css">
         <title>Saved Jobs</title>
     </head>
     <body>
@@ -93,14 +51,12 @@
               </ul>
             </div>
         </div>
-        <h1>Saved Jobs</h1>
+        
         <div class="container">
-            <div class="jobs-container" id="savedjobs">
-
+            <div class="center-box" id="savedjobs">
+                <h1>Saved Jobs</h1>
             </div>
-            <div class="view-job" id="view-job">
-  
-            </div>
+            
         </div>
         
 

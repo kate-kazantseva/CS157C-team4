@@ -68,14 +68,8 @@ app.get("/homepage", function (req, res) {
   }
 });
 
-// Recruiter jobs
-app.get('/recruiter/jobs', async function (req, res) {
-  if (req.user) {
-    res.sendFile(__dirname + '/views/jobs-recruiter.html');
-  } else {
-    res.redirect('login');
-  }
-});
+
+
 
 // Create job listing Page
 app.get('/joblisting/create', function(req, res, next){
@@ -108,15 +102,6 @@ app.get('/savedjobs', function(req, res, next){
 app.get('/recently_applied', function(req, res, next){
   if (req.user) {
     res.sendFile(__dirname + '/views/recently_applied.html');
-  } else {
-    res.redirect('login');
-  }
-});
-
-// Recruiter applications
-app.get('/recruiter/applications', async function (req, res) {
-  if (req.user) {
-    res.sendFile(__dirname + '/views/applications-recruiter.html');
   } else {
     res.redirect('login');
   }
