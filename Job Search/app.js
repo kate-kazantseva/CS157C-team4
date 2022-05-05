@@ -113,6 +113,15 @@ app.get('/recently_applied', function(req, res, next){
   }
 });
 
+// Recruiter applications
+app.get('/recruiter/applications', async function (req, res) {
+  if (req.user) {
+    res.sendFile(__dirname + '/views/applications-recruiter.html');
+  } else {
+    res.redirect('login');
+  }
+});
+
 // Job Search Page
 app.get('/job_search', function(req, res, next){
   //Outputs all jobs for now, no search

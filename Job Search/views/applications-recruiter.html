@@ -7,8 +7,7 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="/css/base.css">
-        <link rel="stylesheet" type="text/css" href="/css/jobsviewer.css">
-        
+        <link rel="stylesheet" type="text/css" href="/css/applications-recruiter.css">
         <title>Jobs</title>
     </head>
     <body>
@@ -39,21 +38,31 @@
               </ul>
           </div>
       </div>
-      <h1>Jobs</h1>
+      <h1>Applications</h1>
       
       <div class="container">
-        <div class="jobs-container" id="jobs">
-          <div class ="joblisting">
-            job listing
+        <div class="applications-container" id="apps-container">
+          <div class ="application" id="app">
+            <div class="app info">
+                John Smith<br>
+                San Jose State University<br>
+                <a href="#">resume</a><br>
+                Applying for: QA Engineer
+            </div>
+            <div class="app info">Status: pending</div>
           </div>
         </div>
-        <div class="view-job" id="view-job">
-          job title<br>
-          <button class="btn-primary">
-            edit job listing
-          </button>
-          <br>
-          job info
+        
+        <div class="view-app" id="view-app">
+            John Smith <br>
+            <select class="form-select" aria-label="select status">
+                <option selected>select status</option>
+                <option value="1">accepted</option>
+                <option value="2">rejected</option>
+                <option value="3">seen</option>
+            </select>
+            <br>
+            application info
         </div>
       </div>
     </body>
