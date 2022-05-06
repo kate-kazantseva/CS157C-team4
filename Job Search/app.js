@@ -1,5 +1,5 @@
 const express = require('express');
-const exphbs = require('express-handlebars');
+const { engine } = require('express-handlebars');
 const path = require('path');
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
@@ -8,6 +8,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const { SchemaFieldTypes } = require('redis');
+const { application } = require('express');
 
 // Create Redis Client
 let client = redis.createClient(6973, '127.0.0.1');
@@ -36,6 +37,9 @@ app.use((req, res, next) => {
   req.user = authTokens[token];
   next();
 });
+
+app.engine('handlebars', engine({layoutsDir: __dirname + '/views/layouts'}));
+app.set('view engine', 'handlebars');
 
 // Load css
 app.use(express.static('public'));
@@ -285,27 +289,37 @@ app.post('/settings', async function(req, res){
 });
 
 // create application API
-app.post('/application/create', async function(req,res,next){
+app.post('/application/create/:id', async function(req,res,next){
   check = await client.json.get(decodeURI(req.cookies['UserEmail']));
   if (check.app_info == null) {
     client.json.set(decodeURI(req.cookies['UserEmail']), "$.app_info", req.body);
   } 
-
-  // change job_id, need to fetch it from listing (cookie)
-  var job_id;
-  job_id = "job"+Math.floor(Math.random() * 1000000);
-
-  var x = {
- };
-  x[job_id] = req.body  
-  if(check.submitted_apps == null){
-  client.json.set(decodeURI(req.cookies['UserEmail']), "$.submitted_apps", [x])
-  }else{
-    client.json.arrAppend(decodeURI(req.cookies['UserEmail']), "$..submitted_apps", x)
-
+  var app_id = req.params.id + ":" + decodeURI(req.cookies['UserEmail']);
+  var result = await client.json.get(app_id);
+  if (result != null) {
+    res.status(409).send();
+  }
+  
+  client.json.set(app_id, "$", req.body);
+  //add to application id to job listing for easy retrieval of all 
+  //applications for recruiter
+  var listing = await client.json.get(req.params.id);
+  if (listing.applications == null) {
+    client.json.set(req.params.id, "$.applications", [app_id])
+  } else {
+    client.json.arrAppend(req.params.id, "$..applications", app_id)
   }
 
+  var saved_app_info = {"job_id": req.params.id, "job_title": listing.job_title,
+                        "location": listing.location, "company_name": listing.company_name,
+                        "app_id": app_id};
 
+  if(check.submitted_apps == null){
+    client.json.set(decodeURI(req.cookies['UserEmail']), "$.submitted_apps",
+                    [saved_app_info])
+  }else{
+    client.json.arrAppend(decodeURI(req.cookies['UserEmail']), "$..submitted_apps", saved_app_info)
+  }
   
   res.status(201);
   res.redirect('/homepage');
@@ -313,15 +327,21 @@ app.post('/application/create', async function(req,res,next){
 
 // create job listing API
 app.post('/joblisting/create', async function(req,res,next){
-    var job_id;
-    do {
-      job_id = "job"+Math.floor(Math.random() * 1000000);
-      var result = await client.json.get(job_id);
-    } while (result)
-    console.log(req.body)
-    client.json.set(job_id ,"$" ,req.body);
-    client.sAdd("joblist", job_id);
-    res.redirect('/homepage');
+  if (req.user) {
+    if (req.user.type != 'recruiter') res.status(401).send();
+  } else res.status(401).send();
+  var job_id;
+  do {
+    job_id = "job"+Math.floor(Math.random() * 1000000);
+    var result = await client.json.get(job_id);
+  } while (result)
+  client.json.set(job_id ,"$" ,req.body);
+  client.sAdd("joblist", job_id);
+  check = await client.json.get(decodeURI(req.cookies['UserEmail']));
+  if (check.created_jobs == null) {
+    client.json.set(decodeURI(req.cookies['UserEmail']), "$.created_jobs", [job_id]);
+  } else client.json.arrAppend(decodeURI(req.cookies['UserEmail']), "$..created_jobs", job_id);
+  res.redirect('/homepage');
 });
 
 // get job by job id
@@ -352,9 +372,16 @@ app.get('/jobs', async function (req, res) {
     job = await client.json.get(results.members[i]);
     job.job_id = results.members[i];
     job.saved = false;
+    job.applied = false;
     for (k in user.saved_jobs) {
       if (user.saved_jobs[k].job_id == job.job_id) {
         job.saved = true;
+        break;
+      }
+    }
+    for (k in user.submitted_apps) {
+      if (user.submitted_apps[k].job_id == job.job_id) {
+        job.applied = true;
         break;
       }
     }
@@ -388,6 +415,15 @@ app.get('/saved_jobs', async function (req, res) {
   user = await client.json.get(decodeURI(req.cookies['UserEmail']));
   res.setHeader('content-type', 'application/json');
   res.status(200).send(user.saved_jobs);
+});
+
+app.post('/apply/:id', async function (req, res) {
+  if (req.user) {
+    res.render('main', {layout : 'application', job_title: req.body.job_title,
+                                                job_id: req.params.id});
+  } else {
+    res.redirect('login');
+  }
 });
 
 // edit job listing API

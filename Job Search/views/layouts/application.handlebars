@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <script>
+            fetch('/app_info').then(res => res.json()).then(json => {
+                const first_name = document.getElementById("first_name")
+                first_name.value = json.first_name
+                const last_name = document.getElementById("last_name")
+                last_name.value = json.last_name
+                const email = document.getElementById("email")
+                email.value = json.email
+                const phone = document.getElementById("phone")
+                phone.value = json.phone
+                const resume = document.getElementById("resume")
+                resume.value = json.resume
+                const cv = document.getElementById("cv")
+                cv.value = json.cv
+                const title = document.getElementById("title")
+                title.value = json.title
+                const company_name = document.getElementById("company_name")
+                company_name.value = json.title
+                const start_date = document.getElementById("start_date")
+                start_date.value = json.start_date
+                const end_date = document.getElementById("end_date")
+                end_date.value = json.end_date
+                const description = document.getElementById("description")
+                description.value = json.description
+                const education = document.getElementById("education")
+                education.value = json.education
+                const major = document.getElementById("major")
+                major.value = json.major
+                const grad_date = document.getElementById("grad_date")
+                grad_date.value = json.grad_date
+               
+      });
+        </script>
+        <title>Application</title>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="/css/base.css">
+    </head>
+    <body>
+        <div class="container">
+            <div class="center-box">
+                <h1>Application</h1>
+                <h2>{{{job_title}}}</h2>
+                <form  method="post" action="/application/create/{{{job_id}}}" name = "application-form" id="application-form">
+                    <div class="form-group">
+                        <label for="first_name">First name</label><br>
+                        <input type="text" name="first_name" id="first_name" placeholder="John" required class="line-input"/><br>
+                    </div>
+                    <div class="form-group">
+                        <label for="last_name">Last name</label><br>
+                        <input type="text" name="last_name" id="last_name" placeholder="Smith" required class="line-input"/><br>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label><br>
+                        <input type="text" name="email" id="email" placeholder="example@email.com" required class="line-input"/><br>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone #</label><br>
+                        <input type="text" name="phone" id="phone" placeholder="123456789" required class="line-input"/><br>
+                    </div>
+                    <div class="form-group">
+                        <label for="resume">Resume</label><br>
+                        <input type="text" name="resume" id="resume" placeholder="https://" required class="line-input"/><br>
+                    </div>
+
+                    <p>
+                        <button class="btn btn-outline-secondary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                          Work experinece
+                        </button>
+                      </p>
+                      <div class="collapse" id="collapseExample">
+                        <div class="card card-body">
+                            <div class="form-group">
+                                <label for="title"> Title </label><br>
+                                <input type="text" name="title" id="title" placeholder="QA Engineer" required class="line-input"/><br>
+                            </div>
+                            <div class="form-group">
+                                <label for="company_name"> Company </label><br>
+                                <input type="text" name="company_name" id="company_name" placeholder="Company" required class="line-input"/><br>
+                            </div>
+                            <div class="form-group">
+                                <label for="start_date">Start date</label><br>
+                                <input type="date" name="start_date" id="start_date" required/><br>
+                            </div>
+                            <div class="form-group">
+                                <label for="end_date">End date</label><br>
+                                <input type="date" name="end_date" id="end_date"/><br>
+                            </div>
+                            <div class="form-group">
+                                <label for="description"> Description </label><br>
+                                <input type="text" name="description" id="description" placeholder="My job responsibilities includes ...." required class="block-input"/><br>
+                            </div>
+                        </div>
+                      </div>
+                    
+                      <div class="form-group">
+                        <label for="education"> Highest Education </label><br>
+                        <input type="text" name="education" id="education" placeholder="For eg. Bachelors" required class="line-input"/><br>
+                    </div>
+                      <div class="form-group">
+                        <label for="major"> Major </label><br>
+                        <input type="text" name="major" id="major" placeholder="For eg. Computer Science" required class="line-input"/><br>
+                    </div>
+                    <div class="form-group">
+                        <label for="grad_date">Expected Graduation date</label><br>
+                        <input type="date" name="grad_date" id="grad_date"/><br>
+                    </div>
+                    <input type="button"  id="cancel"  value="Cancel" class="btn btn-secondary btn-outline-dark">
+                    <input type="submit" id="submitapp"  value="Send" class="btn btn-secondary">
+                    
+                </form>
+            </div>
+       </div>
+    </body>
+</html>

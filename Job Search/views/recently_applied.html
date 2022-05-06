@@ -4,13 +4,25 @@
         <script>
             fetch('/submitted_apps').then(res => res.json()).then(json => {
                 json.forEach(element => {
-                    for (var key in element){
-                    const newDiv = document.createElement("div");
-                    const content = document.createTextNode(key);
-                    newDiv.appendChild(content);
-                    const container = document.getElementById("submittedjobs");
-                    container.appendChild(newDiv);
-                    }
+                  const newDiv = document.createElement("div");
+                  const link = document.createTextNode(element.job_title)
+                  const loc = document.createTextNode(element.location)
+                  const name = document.createTextNode(element.company_name)
+                  var h3 = document.createElement('h5');
+                  h3.appendChild(link)
+                  newDiv.appendChild(h3);
+                  var h4 = document.createElement('h6')
+                  h4.appendChild(loc)
+                  newDiv.appendChild(h4)
+                  var h4 = document.createElement('h6')
+                  h4.appendChild(name)
+                  newDiv.appendChild(h4)
+                  const container = document.getElementById("submittedjobs");
+                  container.appendChild(newDiv);
+                  newDiv.classList.add('panel-item')
+                  newDiv.style.display = "inline-block";
+                  newDiv.style.width = "300px";
+                  newDiv.style.margin = "20px";
                 });
             });
         </script>
@@ -19,6 +31,7 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="/css/base.css">
+        <link rel="stylesheet" type="text/css" href="/css/dashboard.css">
         <title>Recently Applied</title>
     </head>
     <body>

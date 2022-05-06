@@ -20,20 +20,26 @@
                   if(flag){
                     return;
                   }
-                  if(i>2){
+                  if(i>3){
                     flag = true;
                     return
                   }
-                    for (var key in element){
-                    var newDiv = document.createElement("div");
-                    var content = document.createTextNode(key);
-                    var h3 = document.createElement('h5');
-                    h3.appendChild(content)
-                    newDiv.appendChild(h3);
-                    var container = document.getElementById("applications");
-                    container.appendChild(newDiv);
-                    newDiv.classList.add('panel-item')
-                    }
+                  const newDiv = document.createElement("div");
+                  const link = document.createTextNode(element.job_title)
+                  const loc = document.createTextNode(element.location)
+                  const name = document.createTextNode(element.company_name)
+                  var h3 = document.createElement('h5');
+                  h3.appendChild(link)
+                  newDiv.appendChild(h3);
+                  var h4 = document.createElement('h6')
+                  h4.appendChild(loc)
+                  newDiv.appendChild(h4)
+                  var h4 = document.createElement('h6')
+                  h4.appendChild(name)
+                  newDiv.appendChild(h4)
+                  const container = document.getElementById("applications");
+                  container.appendChild(newDiv);
+                  newDiv.classList.add('panel-item')
                 });
             });
 
@@ -45,7 +51,7 @@
                   if(flag){
                     return;
                   }
-                  if(i>2){
+                  if(i>3){
                     flag = true;
                     return
                   }
