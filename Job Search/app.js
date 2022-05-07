@@ -136,6 +136,16 @@ app.get('/job_search', function(req, res, next){
   }
 });
 
+// Job Search Page
+app.get('/my_joblistings', function(req, res, next){
+  //Outputs all jobs for now, no search
+  if (req.user) {
+    res.sendFile(__dirname + '/views/my-jobs.html');
+  } else {
+    res.redirect('login');
+  }
+});
+
 // User settings 
 app.get('/settings', function(req, res, next){
   if (req.user.type == "student") {
@@ -351,13 +361,6 @@ app.get('/job/:id', async function (req, res) {
   res.status(200).send(job);
 });
 
-// edit job listing API
-app.post('/joblisting/edit/:id', function(req,res,next){ 
-  client.hSet(req.params.id,req.body);
-  res.redirect('/homepage');
-  console.log('updated');
-});
-
 app.get('/logout', function (req, res){
   authTokens[req.cookies['AuthToken']] = null;
   res.redirect('login');
@@ -414,7 +417,11 @@ app.delete('/save_job', async function (req, res) {
 app.get('/saved_jobs', async function (req, res) {
   user = await client.json.get(decodeURI(req.cookies['UserEmail']));
   res.setHeader('content-type', 'application/json');
+  if(user.submitted_apps === undefined){
+    res.status(200).send([{'msg':'no'}]);
+  }else{
   res.status(200).send(user.saved_jobs);
+  }
 });
 
 app.post('/apply/:id', async function (req, res) {
@@ -426,18 +433,30 @@ app.post('/apply/:id', async function (req, res) {
   }
 });
 
-// edit job listing API
-app.post('/joblisting/edit/:id', function(req,res,next){ 
-  client.hSet(req.params.id,req.body);
+// edit auto-fill
+app.post('/edit/:id', async function (req, res) {
+  if (req.user) {
+    job_info = await client.json.get(req.params.id)
+    console.log('This is jobinfo' + job_info.location)
+    res.render('main', {layout : 'edit', job_title: req.body.job_title,
+                                          info:job_info,
+                                                job_id: req.params.id});
+  } else {
+    res.redirect('login');
+  }
+});
+
+// save the edited job listing on the backend
+app.post('/editted/:id', async function (req, res) {
+  client.json.set(req.params.id ,"$" ,req.body);
   res.redirect('/homepage');
-  console.log('updated');
+
 });
 
 // get joblistings based on criteria
 app.post('/joblistings/search/', async function (req, res) {
   var exists = new Boolean(false);
   var index_name = "new_index"
-console.log(req.body)
   //check if index already exists
   try{
   const check = await client.ft.info(index_name)
@@ -511,7 +530,6 @@ console.log(req.body)
     query = query+",@job_type:"+req.body.type+"*"
   }
   result = await client.ft.search(index_name, query);
-  console.log(result)
   res.setHeader('content-type', 'application/json');
   res.status(200).send(result);
 });
@@ -519,7 +537,30 @@ console.log(req.body)
 app.get('/submitted_apps', async function (req, res) {
   user = await client.json.get(decodeURI(req.cookies['UserEmail']));
   res.setHeader('content-type', 'application/json');
+  if(user.submitted_apps === undefined){
+    res.status(200).send([{'msg':'no'}]);
+  }
+  else{
   res.status(200).send(user.submitted_apps);
+  }
+});
+
+app.get('/my_apps', async function (req, res) {
+  user = await client.json.get(decodeURI(req.cookies['UserEmail']));
+  res.setHeader('content-type', 'application/json');
+  console.log('check')
+  console.log(user.created_jobs)
+  if(user.created_jobs === undefined){
+    res.status(200).send([{'apple':'no'}]);
+  }else{
+  var job_info=[];
+  for(i in user.created_jobs){
+    var info = await client.json.get(user.created_jobs[i])
+    info.job_id = user.created_jobs[i]
+    job_info.push(info)
+  }
+  res.status(200).send(job_info);
+}
 });
 
 app.get('/app_info', async function (req, res) {

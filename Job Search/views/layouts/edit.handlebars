@@ -1,6 +1,27 @@
 <!doctype html>
 <html lang="en">
     <head>
+        <script>
+            console.log('I am in script ' + "{{{info.location}}}");
+            window.onload = function() {
+            if("{{{info.job_type}}}" === "Internship"){
+                console.log('inside if case')
+                document.getElementById('intern').checked = true
+            }
+            if("{{{info.job_type}}}" === "Parttime"){
+                document.getElementById('part-time').checked = true
+            }
+            if("{{{info.job_type}}}" === "Fulltime"){
+                document.getElementById('full-time').checked = true
+            }
+            if("{{{info.salary_type}}}" === "yr"){
+                document.getElementById('annual').checked = true
+            }
+             if("{{{info.salary_type}}}" === "hr"){
+                document.getElementById('hourly').checked = true
+            }
+            };
+        </script>
         <title>Edit Job Listing</title>
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
@@ -16,9 +37,9 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
               <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="/homepage">Home</a>
-                  </li>
+                  <li class="nav-item">
+              <a class="nav-link" href="/homepage">Home</a>
+            </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/my_joblistings">Jobs</a>
                 </li>
@@ -32,9 +53,9 @@
                   <!-- Replace with person icon-->
                   <a class="nav-link" href="/settings">Settings</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/logout">Logout</a>
-                </li>
+                <form class="d-flex" action="/logout">
+                  <button class="btn btn-outline-light" type="submit">Log out</button>
+                </form>
               </ul>
             </div>
         
@@ -42,14 +63,20 @@
         <div class="container">
             <div class="center-box">
                 <h1>Edit job listing</h1>
-                <form  method="post" action="/joblisting/edit/" onsubmit="this.action = this.action + this.job_id.value; this.submit();" name= "joblisting-form" id="joblisting-form">
+                    <h2>{{{info.location}}}</h2>
                     <div class="form-group">
                         <label for="job_id">Job ID</label><br>
-                        <input type="text" name="job_id" id="job_id" placeholder="000" required class="line-input"/><br>
+                        <input type="text" name="job_id" id="job_id" placeholder="000" value = {{{job_id}}} required readonly class="line-input"/><br>
                     </div>
+                <form  method="post" action="/editted/{{{job_id}}}" name= "joblisting-form" id="joblisting-form">
+                    
                     <div class="form-group">
                         <label for="jobtitle">Job title</label><br>
-                        <input type="text" name="job_title" id="jobtitle" placeholder="QA Engineer" required class="line-input"/><br>
+                        <input type="text" name="job_title" id="jobtitle" placeholder="QA Engineer" value = "{{{job_title}}}" required class="line-input"/><br>
+                    </div>
+                     <div class="form-group">
+                        <label for="company_name">Company</label><br>
+                        <input type="text" name="company_name" id="company_name" placeholder="Google" value = "{{{info.company_name}}}" required class="line-input"/><br>
                     </div>
                     <div class="form-group">
                         <label for="salary-type">Salary type</label><br>
@@ -60,41 +87,41 @@
                     </div>
                     <div class="form-group">
                         <label for="salary-range">Salary range</label><br>
-                        <input type="number" name ="salary_range_start" id="salaryrange-start" placeholder="Salary range start" class="line-input"/><br>
-                        <input type="number" name="salary_range_end" id="salaryrange-end" placeholder="Salary range end" class="line-input"/><br><br>
+                        <input type="number" name ="salary_range_start" id="salaryrange-start" placeholder="Salary range start" value="{{{info.salary_range_start}}}" class="line-input"/><br>
+                        <input type="number" name="salary_range_end" id="salaryrange-end" placeholder="Salary range end" value="{{{info.salary_range_end}}}" class="line-input"/><br><br>
                     </div>
                     <div class="form-group">
                         <label for="job-type">Job type</label><br>
-                        <input type="radio" name ="job_type" id="full-time" value="Full-time"/>
+                        <input type="radio" name ="job_type" id="full-time" value="Fulltime"/>
                         <label for="full-time">Full-time</label>
-                        <input type="radio" name ="job_type" id="part-time" n value="Part-time"/>
+                        <input type="radio" name ="job_type" id="part-time" value="Parttime"/>
                         <label for="part-time">Part-time</label>
                         <input type="radio" name ="job_type" id="intern" value="Internship"/>
                         <label for="intern">Internship</label><br>
                     </div>
                     <div class="form-group">
                         <label for="location">Location</label><br>
-                    <input type="text" name="location" id="location" placeholder="San Jose, CA" required class="line-input"/><br>
+                    <input type="text" name="location" id="location" placeholder="San Jose, CA" value="{{{info.location}}}" required class="line-input"/><br>
                     </div>
                     <div class="form-group">
                         <label for="experience">Experience</label><br>
-                        <input type="text" name="experience" id="experience" placeholder="0-2 years" class="line-input"/><br>
+                        <input type="text" name="experience" id="experience" placeholder="0-2 years" value="{{{info.experience}}}" class="line-input"/><br>
                     </div>
                     <div class="form-group">
                         <label for="expiration">Expiration date</label><br>
-                        <input type="date" name="exp_date" id="expiration" required/><br>
+                        <input type="date" name="exp_date" id="expiration" value="{{{info.exp_date}}}" required/><br>
                     </div>
                     <div class="form-group">
                         <label for="description">Job description</label><br>
-                        <textarea id="description" name="description" placeholder="Join Google's Summer 2022 internship program!" class="block-input"></textarea><br>
+                        <input type="text" id="description" name="description" placeholder="Join Google's Summer 2022 internship program!" value="{{{info.description}}}" class="block-input"></textarea><br>
                     </div>
                     <div class="form-group">
                         <label for="qualifications_min">Minimum qualifications</label><br>
-                        <textarea id="qualifications-min"  name="m_qualifications" placeholder="Pursuing a Bachelor's in Computer Science or related field." required class="block-input"></textarea><br>
+                        <input type="text" id="qualifications-min"  name="m_qualifications" placeholder="Pursuing a Bachelor's in Computer Science or related field." value="{{{info.m_qualifications}}}" required class="block-input"></textarea><br>
                     </div>
                     <div class="form-group">
                         <label for="qualifications_pref">Preferred qualifications</label><br>
-                        <textarea id="qualifications-pref"  name="p_qualifications" placeholder="Proficient in Python" required class="block-input"></textarea><br>
+                        <input type="text" id="qualifications-pref"  name="p_qualifications" placeholder="Proficient in Python" value="{{{info.p_qualifications}}}" required class="block-input"></textarea><br>
                     </div>
                     
                     <input type="button"  id="cancel"  value="Cancel" class="btn btn-outline-secondary">

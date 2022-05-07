@@ -4,6 +4,20 @@
         <script>
             fetch('/submitted_apps').then(res => res.json()).then(json => {
                 json.forEach(element => {
+                  if(element.msg){
+                    const newDiv = document.createElement("div");
+                    const br = document.createElement("BR")
+                    var h3 = document.createElement('h3');
+                    const link = document.createTextNode('You do not have any applications at this time!!')
+                  h3.appendChild(link)
+                  const container = document.getElementById("submittedjobs");
+                  newDiv.appendChild(br)
+                  newDiv.appendChild(br)
+                  newDiv.appendChild(br)
+                  newDiv.appendChild(h3)
+                  container.appendChild(newDiv);
+                  }
+                  else{
                   const newDiv = document.createElement("div");
                   const link = document.createTextNode(element.job_title)
                   const loc = document.createTextNode(element.location)
@@ -23,6 +37,7 @@
                   newDiv.style.display = "inline-block";
                   newDiv.style.width = "300px";
                   newDiv.style.margin = "20px";
+                  }
                 });
             });
         </script>
@@ -43,11 +58,14 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
               <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                  <a class="nav-link" href="/savedjobs">Saved Jobs</a>
+                  <a class="nav-link" href="/homepage">Home</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="/recently_applied">Recently Applied</a>
+                  <a class="nav-link" href="/savedjobs">Saved Jobs</a>
                 </li>
+                <!-- <li class="nav-item">
+                  <a class="nav-link" href="/recently_applied">Recently Applied</a>
+                </li> -->
                 <li class="nav-item">
                   <!-- Replace with search icon-->
                   <a class="nav-link" href="/job_search">Search</a>

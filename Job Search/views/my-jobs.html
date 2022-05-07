@@ -2,30 +2,29 @@
 <html lang="en">
     <head>
         <script>
-            fetch('/saved_jobs').then(res => res.json()).then(json => {
+            fetch('/my_apps').then(res => res.json()).then(json => {
                 json.forEach(element => {
-                  if(element.msg){
+                    if(element.apple){
                     const newDiv = document.createElement("div");
                     const br = document.createElement("BR")
                     var h3 = document.createElement('h3');
-                    const link = document.createTextNode('You do not have any saved jobs at this time!!')
+                    const link = document.createTextNode('You do not have any job listings at this time!!')
                   h3.appendChild(link)
-                  const container = document.getElementById("savedjobs");
+                  const container = document.getElementById("joblistings");
                   newDiv.appendChild(br)
                   newDiv.appendChild(br)
                   newDiv.appendChild(br)
                   newDiv.appendChild(h3)
                   container.appendChild(newDiv);
                   }else{
+                      console.log('i am in html else')
                     const newDiv = document.createElement("div");
                     newDiv.classList.add("joblisting")
                     const link = document.createElement("a")
                     link.setAttribute("href","#")
                     link.innerText = element.job_title
-                    //const content = document.createTextNode(element.job_title);
-                    //link.appendChild(content);
                     newDiv.appendChild(link);
-                    const container = document.getElementById("savedjobs");
+                    const container = document.getElementById("joblistings");
                     container.appendChild(newDiv);
                     newDiv.addEventListener("click",function() {
                       var full_info = document.getElementById('view-job');
@@ -34,11 +33,21 @@
                       var title = document.createTextNode(element.job_title);
                       h3.appendChild(title);
                       full_info.appendChild(h3);
-                      // apply button
-                      const apply_button = document.createElement("button");
+                    // apply button
+                    var form = document.createElement("form");
+                      var apply_button = document.createElement("input");
+                      var hidden_data = document.createElement("input");
+                      hidden_data.type = "hidden";
+                      hidden_data.name = "job_title";
+                      hidden_data.value = element.job_title;
+                      form.method = "POST";
+                      form.action = "/edit/" + element.job_id;
+                      apply_button.type = "submit";
+                      apply_button.value = "Edit";
                       apply_button.classList.add("btn-primary");
-                      apply_button.innerHTML = "Apply";
-                      full_info.appendChild(apply_button);
+                      form.appendChild(hidden_data);
+                      form.appendChild(apply_button);
+                      full_info.appendChild(form);
                       full_info.appendChild(document.createElement("br"));
                       // job info
                       var sal = document.createTextNode("Salary range: " + element.salary_range_start +  " - " + element.salary_range_end + " per " + element.salary_type);
@@ -65,8 +74,9 @@
                       var expiration = document.createTextNode("Expiration date: " + element.exp_date);
                       full_info.appendChild(expiration);
                       full_info.appendChild(document.createElement("br"));
+                    
                     })
-                  }
+                }
                 });
                 
             });
@@ -88,37 +98,37 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
               <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                  <a class="nav-link" href="/homepage">Home</a>
-                </li>
-                <!-- <li class="nav-item">
-                  <a class="nav-link" href="/savedjobs">Saved Jobs</a>
-                </li> -->
-                <li class="nav-item">
-                  <a class="nav-link" href="/recently_applied">Recently Applied</a>
-                </li>
-                <li class="nav-item">
-                  <!-- Replace with search icon-->
-                  <a class="nav-link" href="/job_search">Search</a>
-                </li>
-                <li class="nav-item">
-                  <!-- Replace with person icon-->
-                  <a class="nav-link" href="/settings">Settings</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="/logout">Logout</a>
-                </li>
-              </ul>
-            </div>
-        </div>
-        <h1>Saved Jobs</h1>
-        <div class="container">
-            <div class="jobs-container" id="savedjobs">
+                    <a class="nav-link" href="/homepage">Home</a>
+                  </li>
+                  <!-- <li class="nav-item">
+                      <a class="nav-link" href="/my_joblistings">Jobs</a>
+                  </li> -->
+                  <li class="nav-item">
+                      <a class="nav-link" href="/joblisting/create">Create job listing</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link" href="/recruiter/applications">Applications</a>
+                  </li>
+                  <li class="nav-item">
+                      <!-- Replace with person icon-->
+                      <a class="nav-link" href="/settings">Settings</a>
+                  </li>
+                  <form class="d-flex" action="/logout">
+                      <button class="btn btn-outline-light" type="submit">Log out</button>
+                  </form>
+                  </ul>
+              </div>
+          </div>
+        <h1>My Job-listings</h1>
+        
+            <div class="jobs-container" id="joblistings">
 
             </div>
             <div class="view-job" id="view-job">
   
             </div>
-        </div>
+        
+        
         
 
     </body>

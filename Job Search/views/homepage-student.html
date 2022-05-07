@@ -12,10 +12,24 @@
 
       // recently applied
       fetch('/submitted_apps').then(res => res.json()).then(json => {
+        
                 // most recent records
                 let flag = false;
                 json.reverse();
                 json.forEach((element,i) => {
+                  if(element.msg){
+          const newDiv = document.createElement("div");
+                    const br = document.createElement("BR")
+                    var h3 = document.createElement('h4');
+                    const link = document.createTextNode('You do not have any applications at this time!!')
+                  h3.appendChild(link)
+                  const container = document.getElementById("applications");
+                  newDiv.appendChild(br)
+                  newDiv.appendChild(br)
+                  newDiv.appendChild(br)
+                  newDiv.appendChild(h3)
+                  container.appendChild(newDiv);
+        }else{
                   // display on 3 records
                   if(flag){
                     return;
@@ -40,6 +54,7 @@
                   const container = document.getElementById("applications");
                   container.appendChild(newDiv);
                   newDiv.classList.add('panel-item')
+        }
                 });
             });
 
@@ -48,6 +63,19 @@
                 let flag = false;
                 json.reverse();
                 json.forEach((element,i) => {
+                  if(element.msg){
+          const newDiv = document.createElement("div");
+                    const br = document.createElement("BR")
+                    var h3 = document.createElement('h4');
+                    const link = document.createTextNode('You do not have any saved jobs at this time!!')
+                  h3.appendChild(link)
+                  const container = document.getElementById("savedjobs");
+                  newDiv.appendChild(br)
+                  newDiv.appendChild(br)
+                  newDiv.appendChild(br)
+                  newDiv.appendChild(h3)
+                  container.appendChild(newDiv);
+        }else{
                   if(flag){
                     return;
                   }
@@ -71,6 +99,7 @@
                     const container = document.getElementById("savedjobs");
                     container.appendChild(newDiv);
                     newDiv.classList.add('panel-item')
+                }
 
                 });
             });
