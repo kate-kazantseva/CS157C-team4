@@ -330,8 +330,6 @@ app.post('/application/create/:id', async function(req,res,next){
   }else{
     client.json.arrAppend(decodeURI(req.cookies['UserEmail']), "$..submitted_apps", saved_app_info)
   }
-  
-  res.status(201);
   res.redirect('/homepage');
 });
 
