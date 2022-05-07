@@ -3,6 +3,7 @@
     <head>
         <script>
             fetch('/saved_jobs').then(res => res.json()).then(json => {
+                json.reverse();
                 json.forEach(element => {
                   if(element.msg){
                     const newDiv = document.createElement("div");
@@ -19,12 +20,18 @@
                   }else{
                     const newDiv = document.createElement("div");
                     newDiv.classList.add("joblisting")
-                    const link = document.createElement("a")
-                    link.setAttribute("href","#")
-                    link.innerText = element.job_title
-                    //const content = document.createTextNode(element.job_title);
-                    //link.appendChild(content);
-                    newDiv.appendChild(link);
+                    const link = document.createTextNode(element.job_title)
+                    const loc = document.createTextNode(element.location)
+                    const name = document.createTextNode(element.company_name)
+                    var h3 = document.createElement('h5');
+                    h3.appendChild(link)
+                    newDiv.appendChild(h3);
+                    var h4 = document.createElement('h6')
+                    h4.appendChild(name)
+                    newDiv.appendChild(h4)
+                    var h4 = document.createElement('h6')
+                    h4.appendChild(loc)
+                    newDiv.appendChild(h4)
                     const container = document.getElementById("savedjobs");
                     container.appendChild(newDiv);
                     newDiv.addEventListener("click",function() {

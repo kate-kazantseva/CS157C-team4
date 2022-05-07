@@ -18,18 +18,18 @@
                 json.reverse();
                 json.forEach((element,i) => {
                   if(element.msg){
-          const newDiv = document.createElement("div");
+                    const newDiv = document.createElement("div");
                     const br = document.createElement("BR")
                     var h3 = document.createElement('h4');
                     const link = document.createTextNode('You do not have any applications at this time!!')
-                  h3.appendChild(link)
-                  const container = document.getElementById("applications");
-                  newDiv.appendChild(br)
-                  newDiv.appendChild(br)
-                  newDiv.appendChild(br)
-                  newDiv.appendChild(h3)
-                  container.appendChild(newDiv);
-        }else{
+                    h3.appendChild(link)
+                    const container = document.getElementById("applications");
+                    newDiv.appendChild(br)
+                    newDiv.appendChild(br)
+                    newDiv.appendChild(br)
+                    newDiv.appendChild(h3)
+                    container.appendChild(newDiv);
+                  }else{
                   // display on 3 records
                   if(flag){
                     return;
@@ -46,10 +46,10 @@
                   h3.appendChild(link)
                   newDiv.appendChild(h3);
                   var h4 = document.createElement('h6')
-                  h4.appendChild(loc)
+                  h4.appendChild(name)
                   newDiv.appendChild(h4)
                   var h4 = document.createElement('h6')
-                  h4.appendChild(name)
+                  h4.appendChild(loc)
                   newDiv.appendChild(h4)
                   const container = document.getElementById("applications");
                   container.appendChild(newDiv);
@@ -91,10 +91,10 @@
                     h3.appendChild(link)
                     newDiv.appendChild(h3);
                     var h4 = document.createElement('h6')
-                    h4.appendChild(loc)
+                    h4.appendChild(name)
                     newDiv.appendChild(h4)
                     var h4 = document.createElement('h6')
-                    h4.appendChild(name)
+                    h4.appendChild(loc)
                     newDiv.appendChild(h4)
                     const container = document.getElementById("savedjobs");
                     container.appendChild(newDiv);
@@ -116,21 +116,21 @@
                     return
                   }
                   const newDiv = document.createElement("div");
-                    const link = document.createTextNode(element.job_title)
-                    const loc = document.createTextNode(element.location)
-                    const name = document.createTextNode(element.company_name)
-                    var h3 = document.createElement('h5');
-                    h3.appendChild(link)
-                    newDiv.appendChild(h3);
-                    var h4 = document.createElement('h6')
-                    h4.appendChild(loc)
-                    newDiv.appendChild(h4)
-                    var h4 = document.createElement('h6')
-                    h4.appendChild(name)
-                    newDiv.appendChild(h4)
-                    const container = document.getElementById("joblistings");
-                    container.appendChild(newDiv);
-                    newDiv.classList.add('panel-item')
+                  const link = document.createTextNode(element.job_title)
+                  const loc = document.createTextNode(element.location)
+                  const name = document.createTextNode(element.company_name)
+                  var h3 = document.createElement('h5');
+                  h3.appendChild(link)
+                  newDiv.appendChild(h3);
+                  var h4 = document.createElement('h6')
+                  h4.appendChild(name)
+                  newDiv.appendChild(h4)
+                  var h4 = document.createElement('h6')
+                  h4.appendChild(loc)
+                  newDiv.appendChild(h4)
+                  const container = document.getElementById("joblistings");
+                  container.appendChild(newDiv);
+                  newDiv.classList.add('panel-item')
                   });
             });
     </script>

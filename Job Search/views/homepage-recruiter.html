@@ -10,50 +10,41 @@
       });
 
       // my recent job listings
-      fetch('/my_apps').then(res => res.json()).then(json => {
-                // most recent records
-                let flag = false;
-                json.reverse();
-                json.forEach((element,i) => {
-                  if(element.apple){
-          const newDiv = document.createElement("div");
-                    const br = document.createElement("BR")
-                    var h3 = document.createElement('h4');
-                    const link = document.createTextNode('You do not have any job listings at this time!!')
-                  h3.appendChild(link)
-                  const container = document.getElementById("joblistings");
-                  newDiv.appendChild(br)
-                  newDiv.appendChild(br)
-                  newDiv.appendChild(br)
-                  newDiv.appendChild(h3)
-                  container.appendChild(newDiv);
-        }else{
-                  // display on 3 records
-                  if(flag){
-                    return;
-                  }
-                  if(i>3){
-                    flag = true;
-                    return
-                  }
-                  const newDiv = document.createElement("div");
-                  const link = document.createTextNode(element.job_title)
-                  const loc = document.createTextNode(element.job_type)
-                  const name = document.createTextNode(element.company_name)
-                  var h3 = document.createElement('h5');
-                  h3.appendChild(link)
-                  newDiv.appendChild(h3);
-                  var h4 = document.createElement('h6')
-                  h4.appendChild(loc)
-                  newDiv.appendChild(h4)
-                  var h4 = document.createElement('h6')
-                  h4.appendChild(name)
-                  newDiv.appendChild(h4)
-                  const container = document.getElementById("joblistings");
-                  container.appendChild(newDiv);
-                  newDiv.classList.add('panel-item')
-                }
-                });
+      fetch('/most_recent_listings').then(res => res.json()).then(json => {
+                    // most recent records
+                    json.forEach((element,i) => {
+                      if(element.apple){
+                        const newDiv = document.createElement("div");
+                        const br = document.createElement("BR")
+                        var h3 = document.createElement('h4');
+                        const link = document.createTextNode('You do not have any job listings at this time!!')
+                        h3.appendChild(link)
+                        const container = document.getElementById("joblistings");
+                        newDiv.appendChild(br)
+                        newDiv.appendChild(br)
+                        newDiv.appendChild(br)
+                        newDiv.appendChild(h3)
+                        container.appendChild(newDiv);
+                      }else{
+                        // display on 3 records
+                        const newDiv = document.createElement("div");
+                        const link = document.createTextNode(element.job_title)
+                        const name = document.createTextNode(element.company_name)
+                        const loc = document.createTextNode(element.location)
+                        var h3 = document.createElement('h5');
+                        h3.appendChild(link)
+                        newDiv.appendChild(h3);
+                        var h4 = document.createElement('h6')
+                        h4.appendChild(name)
+                        newDiv.appendChild(h4)
+                        var h4 = document.createElement('h6')
+                        h4.appendChild(loc)
+                        newDiv.appendChild(h4)
+                        const container = document.getElementById("joblistings");
+                        container.appendChild(newDiv);
+                        newDiv.classList.add('panel-item')
+                      }
+                    });
             });
     </script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>

@@ -545,23 +545,44 @@ app.get('/submitted_apps', async function (req, res) {
   }
 });
 
-app.get('/my_apps', async function (req, res) {
+app.get('/created_jobs', async function (req, res) {
   user = await client.json.get(decodeURI(req.cookies['UserEmail']));
   res.setHeader('content-type', 'application/json');
-  console.log('check')
-  console.log(user.created_jobs)
   if(user.created_jobs === undefined){
-    res.status(200).send([{'apple':'no'}]);
+    res.status(200).send([]);
   }else{
-  var job_info=[];
-  for(i in user.created_jobs){
-    var info = await client.json.get(user.created_jobs[i])
-    info.job_id = user.created_jobs[i]
-    job_info.push(info)
+    var job_info=[];
+    for(i in user.created_jobs){
+      var info = await client.json.get(user.created_jobs[i])
+      info.job_id = user.created_jobs[i]
+      job_info.push(info)
+    }
+    res.status(200).send(job_info);
   }
-  res.status(200).send(job_info);
-}
 });
+
+app.get('/most_recent_listings', async function (req, res) {
+  if (req.user) {
+    if (req.user.type === "recruiter") {
+      user = await client.json.get(req.user.email);
+      res.setHeader('content-type', 'application/json');
+      if(user.created_jobs === undefined){
+        res.status(200).send([]);
+      } else {
+        var job_info=[];
+        for(i = user.created_jobs.length - 1; i >= 0; i--){
+          if (job_info.length == 4)
+            break;
+          var info = await client.json.get(user.created_jobs[i])
+          info.job_id = user.created_jobs[i]
+          job_info.push(info)
+        }
+        res.status(200).send(job_info);
+      }
+    } else res.status(401).send();
+  } else res.status(401).send();
+});
+
 
 app.get('/app_info', async function (req, res) {
   user = await client.json.get(decodeURI(req.cookies['UserEmail']));

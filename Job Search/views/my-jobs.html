@@ -2,81 +2,87 @@
 <html lang="en">
     <head>
         <script>
-            fetch('/my_apps').then(res => res.json()).then(json => {
-                json.forEach(element => {
-                    if(element.apple){
+            fetch('/created_jobs').then(res => res.json()).then(json => {
+                if (json === []) {
                     const newDiv = document.createElement("div");
                     const br = document.createElement("BR")
                     var h3 = document.createElement('h3');
                     const link = document.createTextNode('You do not have any job listings at this time!!')
-                  h3.appendChild(link)
-                  const container = document.getElementById("joblistings");
-                  newDiv.appendChild(br)
-                  newDiv.appendChild(br)
-                  newDiv.appendChild(br)
-                  newDiv.appendChild(h3)
-                  container.appendChild(newDiv);
-                  }else{
-                      console.log('i am in html else')
+                    h3.appendChild(link)
+                    const container = document.getElementById("joblistings");
+                    newDiv.appendChild(br)
+                    newDiv.appendChild(br)
+                    newDiv.appendChild(br)
+                    newDiv.appendChild(h3)
+                    container.appendChild(newDiv);
+                }
+                json.forEach(element => {
                     const newDiv = document.createElement("div");
+                    newDiv.id = element.job_id;
                     newDiv.classList.add("joblisting")
-                    const link = document.createElement("a")
-                    link.setAttribute("href","#")
-                    link.innerText = element.job_title
-                    newDiv.appendChild(link);
+                    const link = document.createTextNode(element.job_title)
+                    const loc = document.createTextNode(element.location)
+                    const name = document.createTextNode(element.company_name)
+                    var h3 = document.createElement('h5');
+                    h3.appendChild(link)
+                    newDiv.appendChild(h3);
+                    var h4 = document.createElement('h6')
+                    h4.appendChild(loc)
+                    newDiv.appendChild(h4)
+                    var h4 = document.createElement('h6')
+                    h4.appendChild(name)
+                    newDiv.appendChild(h4)
                     const container = document.getElementById("joblistings");
                     container.appendChild(newDiv);
                     newDiv.addEventListener("click",function() {
-                      var full_info = document.getElementById('view-job');
-                      full_info.innerHTML = "";
-                      var h3 = document.createElement('h3');
-                      var title = document.createTextNode(element.job_title);
-                      h3.appendChild(title);
-                      full_info.appendChild(h3);
-                    // apply button
-                    var form = document.createElement("form");
-                      var apply_button = document.createElement("input");
-                      var hidden_data = document.createElement("input");
-                      hidden_data.type = "hidden";
-                      hidden_data.name = "job_title";
-                      hidden_data.value = element.job_title;
-                      form.method = "POST";
-                      form.action = "/edit/" + element.job_id;
-                      apply_button.type = "submit";
-                      apply_button.value = "Edit";
-                      apply_button.classList.add("btn-primary");
-                      form.appendChild(hidden_data);
-                      form.appendChild(apply_button);
-                      full_info.appendChild(form);
-                      full_info.appendChild(document.createElement("br"));
-                      // job info
-                      var sal = document.createTextNode("Salary range: " + element.salary_range_start +  " - " + element.salary_range_end + " per " + element.salary_type);
-                      full_info.appendChild(sal);
-                      full_info.appendChild(document.createElement("br"));
-                      var jbtype = document.createTextNode("Job type: " + element.job_type);
-                      full_info.appendChild(jbtype);
-                      full_info.appendChild(document.createElement("br"));
-                      var loc = document.createTextNode("Location: " + element.location);
-                      full_info.appendChild(loc);
-                      full_info.appendChild(document.createElement("br"));
-                      var exp = document.createTextNode("Experience: " + element.experience);
-                      full_info.appendChild(exp);
-                      full_info.appendChild(document.createElement("br"));
-                      var desc = document.createTextNode("Description: " + element.description);
-                      full_info.appendChild(desc);
-                      full_info.appendChild(document.createElement("br"));
-                      var minq = document.createTextNode("Minimum Qualifications: " + element.m_qualifications);
-                      full_info.appendChild(minq);
-                      full_info.appendChild(document.createElement("br"));
-                      var prefq = document.createTextNode("Preferred Qualifications: " + element.p_qualifications);
-                      full_info.appendChild(prefq);
-                      full_info.appendChild(document.createElement("br"));
-                      var expiration = document.createTextNode("Expiration date: " + element.exp_date);
-                      full_info.appendChild(expiration);
-                      full_info.appendChild(document.createElement("br"));
-                    
+                        var full_info = document.getElementById('view-job');
+                        full_info.innerHTML = "";
+                        var h3 = document.createElement('h3');
+                        var title = document.createTextNode(element.job_title);
+                        h3.appendChild(title);
+                        full_info.appendChild(h3);
+                        // edit button
+                        var form = document.createElement("form");
+                        var edit_button = document.createElement("input");
+                        var hidden_data = document.createElement("input");
+                        hidden_data.type = "hidden";
+                        hidden_data.name = "job_title";
+                        hidden_data.value = element.job_title;
+                        form.method = "POST";
+                        form.action = "/edit/" + element.job_id;
+                        edit_button.type = "submit";
+                        edit_button.value = "Edit";
+                        edit_button.classList.add("btn-primary");
+                        form.appendChild(hidden_data);
+                        form.appendChild(edit_button);
+                        full_info.appendChild(form);
+                        full_info.appendChild(document.createElement("br"));
+                        // job info
+                        var sal = document.createTextNode("Salary range: " + element.salary_range_start +  " - " + element.salary_range_end + " per " + element.salary_type);
+                        full_info.appendChild(sal);
+                        full_info.appendChild(document.createElement("br"));
+                        var jbtype = document.createTextNode("Job type: " + element.job_type);
+                        full_info.appendChild(jbtype);
+                        full_info.appendChild(document.createElement("br"));
+                        var loc = document.createTextNode("Location: " + element.location);
+                        full_info.appendChild(loc);
+                        full_info.appendChild(document.createElement("br"));
+                        var exp = document.createTextNode("Experience: " + element.experience);
+                        full_info.appendChild(exp);
+                        full_info.appendChild(document.createElement("br"));
+                        var desc = document.createTextNode("Description: " + element.description);
+                        full_info.appendChild(desc);
+                        full_info.appendChild(document.createElement("br"));
+                        var minq = document.createTextNode("Minimum Qualifications: " + element.m_qualifications);
+                        full_info.appendChild(minq);
+                        full_info.appendChild(document.createElement("br"));
+                        var prefq = document.createTextNode("Preferred Qualifications: " + element.p_qualifications);
+                        full_info.appendChild(prefq);
+                        full_info.appendChild(document.createElement("br"));
+                        var expiration = document.createTextNode("Expiration date: " + element.exp_date);
+                        full_info.appendChild(expiration);
+                        full_info.appendChild(document.createElement("br"));
                     })
-                }
                 });
                 
             });
@@ -119,17 +125,14 @@
                   </ul>
               </div>
           </div>
-        <h1>My Job-listings</h1>
-        
+        <h1>My Job Listings</h1>
+        <div class="container">
             <div class="jobs-container" id="joblistings">
 
             </div>
             <div class="view-job" id="view-job">
   
             </div>
-        
-        
-        
-
+        </div>
     </body>
 </html>
