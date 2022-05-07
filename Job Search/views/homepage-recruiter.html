@@ -8,6 +8,53 @@
         const container = document.getElementById("greeting");
         container.appendChild(greeting);
       });
+
+      // my recent job listings
+      fetch('/my_apps').then(res => res.json()).then(json => {
+                // most recent records
+                let flag = false;
+                json.reverse();
+                json.forEach((element,i) => {
+                  if(element.apple){
+          const newDiv = document.createElement("div");
+                    const br = document.createElement("BR")
+                    var h3 = document.createElement('h4');
+                    const link = document.createTextNode('You do not have any job listings at this time!!')
+                  h3.appendChild(link)
+                  const container = document.getElementById("joblistings");
+                  newDiv.appendChild(br)
+                  newDiv.appendChild(br)
+                  newDiv.appendChild(br)
+                  newDiv.appendChild(h3)
+                  container.appendChild(newDiv);
+        }else{
+                  // display on 3 records
+                  if(flag){
+                    return;
+                  }
+                  if(i>3){
+                    flag = true;
+                    return
+                  }
+                  const newDiv = document.createElement("div");
+                  const link = document.createTextNode(element.job_title)
+                  const loc = document.createTextNode(element.job_type)
+                  const name = document.createTextNode(element.company_name)
+                  var h3 = document.createElement('h5');
+                  h3.appendChild(link)
+                  newDiv.appendChild(h3);
+                  var h4 = document.createElement('h6')
+                  h4.appendChild(loc)
+                  newDiv.appendChild(h4)
+                  var h4 = document.createElement('h6')
+                  h4.appendChild(name)
+                  newDiv.appendChild(h4)
+                  const container = document.getElementById("joblistings");
+                  container.appendChild(newDiv);
+                  newDiv.classList.add('panel-item')
+                }
+                });
+            });
     </script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
@@ -27,7 +74,7 @@
         <ul class="navbar-nav ml-auto">
 
             <li class="nav-item">
-                <a class="nav-link" href="/recruiter/jobs">Jobs</a>
+                <a class="nav-link" href="/my_joblistings">Jobs</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/joblisting/create">Create job listing</a>
@@ -49,10 +96,7 @@
     <div class="dashboard">
       <div class="dash-panel" id="joblistings">
         <!-- Loop through 10 jobs -->
-        <h3>Jobs</h3> <a class="view-all" href="">View all</a>
-        <div class="panel-item" id="joblisting">
-          job listing
-        </div>
+        <h3>Jobs</h3> <a class="view-all" href="my_joblistings">View all</a>
       </div>
       <div class="dash-panel" id="savedjobs">
         <!-- Loop through 10 saved jobs-->
