@@ -26,7 +26,7 @@
                         newDiv.appendChild(h3)
                         container.appendChild(newDiv);
                       }else{
-                        // display on 3 records
+                        // display on 4 records
                         const newDiv = document.createElement("div");
                         const link = document.createTextNode(element.job_title)
                         const name = document.createTextNode(element.company_name)
@@ -46,6 +46,48 @@
                       }
                     });
             });
+
+      fetch('/inbox').then(res => res.json()).then(json => {
+        json.forEach((element) => {
+          const newDiv = document.createElement("div");
+          const infoDiv = document.createElement("div");
+          const newCountDiv = document.createElement("div");
+          const link = document.createTextNode(element.job_title);
+          const name = document.createTextNode(element.company_name);
+          const loc = document.createTextNode(element.location);
+          const count = document.createTextNode(element.new_app_count);
+          var h5 = document.createElement('h5');
+          h5.appendChild(link);
+          infoDiv.appendChild(h5);
+          var h4 = document.createElement('h6');
+          h4.appendChild(name);
+          infoDiv.appendChild(h4);
+          var h4 = document.createElement('h6');
+          h4.appendChild(loc);
+          infoDiv.appendChild(h4);
+          const p = document.createElement('p');
+          p.style.fontSize = "20px";
+          p.appendChild(count);
+          newCountDiv.appendChild(p);
+          const container = document.getElementById("inbox");
+          container.appendChild(newDiv);
+          newDiv.classList.add('panel-item');
+          infoDiv.style.display = "inline-block";
+          newCountDiv.style.display = "inline-block";
+          newCountDiv.style.float = "right";
+          newCountDiv.style.borderRadius = "50%";
+          newCountDiv.style.borderBlockColor = "000000";
+          newCountDiv.style.borderStyle = "solid";
+          newCountDiv.style.borderWidth = "1px";
+          newCountDiv.style.width = "40px";
+          newCountDiv.style.height = "40px";
+          newCountDiv.style.margin = "18px";
+          newCountDiv.style.paddingTop = "5px";
+          newCountDiv.style.textAlign = "center";
+          newDiv.appendChild(infoDiv);
+          newDiv.appendChild(newCountDiv);
+        });
+      });
     </script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
@@ -89,13 +131,10 @@
         <!-- Loop through 10 jobs -->
         <h3>Jobs</h3> <a class="view-all" href="my_joblistings">View all</a>
       </div>
-      <div class="dash-panel" id="savedjobs">
+      <div class="dash-panel" id="inbox">
         <!-- Loop through 10 saved jobs-->
         <!-- Replace with link to saved jobs page -->
         <h3>Inbox</h3> <a class="view-all" href="/recruiter/applications">View all</a>
-        <div class="panel-item" id="savedjob">
-          application
-        </div>
       </div>
       <div class="dash-panel" id="applications">
         <h3>Recruiter tools</h3> 

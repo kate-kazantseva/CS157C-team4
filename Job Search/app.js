@@ -9,6 +9,7 @@ const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const { SchemaFieldTypes } = require('redis');
 const { application } = require('express');
+const { time } = require('console');
 
 // Create Redis Client
 let client = redis.createClient(6973, '127.0.0.1');
@@ -20,10 +21,6 @@ const port = 3000;
 const authTokens = {};
 // Init app
 const app = express();
-
-// View Engine\
-// app.engine('handlebars', engine());
-// app.set('view engine', 'handlebars');
 
 // body-parser
 app.use(bodyParser.json());
@@ -62,11 +59,13 @@ app.get('/', function(req, res, next){
 
 
 app.get("/homepage", function (req, res) {
-  if (req.user.type == "student") {
-    res.sendFile(__dirname + '/views/homepage-student.html');
-  }
-  else if(req.user.type == "recruiter"){
-    res.sendFile(__dirname + '/views/homepage-recruiter.html');
+  if (req.user) {
+    if (req.user.type == "student") {
+      res.sendFile(__dirname + '/views/homepage-student.html');
+    }
+    else if(req.user.type == "recruiter"){
+      res.sendFile(__dirname + '/views/homepage-recruiter.html');
+    } 
   } else {
     res.redirect('login');
   }
@@ -148,11 +147,13 @@ app.get('/my_joblistings', function(req, res, next){
 
 // User settings 
 app.get('/settings', function(req, res, next){
-  if (req.user.type == "student") {
-    res.sendFile(__dirname + '/views/usersettings-student.html');
-  }
-  else if(req.user.type == "recruiter"){
-    res.sendFile(__dirname + '/views/usersettings-recruiter.html');
+  if (req.user) {
+    if (req.user.type == "student") {
+      res.sendFile(__dirname + '/views/usersettings-student.html');
+    }
+    else if(req.user.type == "recruiter"){
+      res.sendFile(__dirname + '/views/usersettings-recruiter.html');
+    }
   }
   else {
     res.redirect('login');
@@ -230,6 +231,9 @@ app.post('/login', async function(req, res){
     }
 
     client.json.get(email.toLowerCase()).then(function(user) {
+      if (user === undefined || user === null) {
+        res.status(400).send("User with such email was not found.");
+      }
       if (Object.prototype.hasOwnProperty.call(user, 'password')) {
         bcrypt.compare(password, user.password).then(function(correct) {
           if (correct) {
@@ -309,8 +313,9 @@ app.post('/application/create/:id', async function(req,res,next){
   if (result != null) {
     res.status(409).send();
   }
-  
-  client.json.set(app_id, "$", req.body);
+  let application = req.body;
+  application.status = "pending";
+  client.json.set(app_id, "$", application);
   //add to application id to job listing for easy retrieval of all 
   //applications for recruiter
   var listing = await client.json.get(req.params.id);
@@ -330,6 +335,13 @@ app.post('/application/create/:id', async function(req,res,next){
   }else{
     client.json.arrAppend(decodeURI(req.cookies['UserEmail']), "$..submitted_apps", saved_app_info)
   }
+  if (listing.created_by != undefined) {
+    client.zAdd(listing.created_by + ":inbox", {score: -Date.now(), value: req.params.id});
+  }
+  let new_app_count = listing.new_app_count;
+  if (new_app_count != undefined) {
+    client.json.set(req.params.id, "$.new_app_count", Number(new_app_count)+1);
+  }
   res.redirect('/homepage');
 });
 
@@ -338,18 +350,72 @@ app.post('/joblisting/create', async function(req,res,next){
   if (req.user) {
     if (req.user.type != 'recruiter') res.status(401).send();
   } else res.status(401).send();
-  var job_id;
+  let job_id;
   do {
     job_id = "job"+Math.floor(Math.random() * 1000000);
     var result = await client.json.get(job_id);
   } while (result)
-  client.json.set(job_id ,"$" ,req.body);
+  let job_info = req.body;
+  job_info.created_by = req.user.email;
+  job_info.new_app_count = 0;
+  client.json.set(job_id ,"$" , job_info);
   client.sAdd("joblist", job_id);
   check = await client.json.get(decodeURI(req.cookies['UserEmail']));
   if (check.created_jobs == null) {
     client.json.set(decodeURI(req.cookies['UserEmail']), "$.created_jobs", [job_id]);
   } else client.json.arrAppend(decodeURI(req.cookies['UserEmail']), "$..created_jobs", job_id);
+  client.zAdd(req.user.email + ":inbox", {score: -Date.now(), value: job_id});
   res.redirect('/homepage');
+});
+
+app.get('/inbox', async function (req, res) {
+  if (req.user) {
+    if (req.user.type === "recruiter") {
+      let set = await client.zRangeByScore(req.user.email + ":inbox", "-inf",
+                                           "+inf", {"LIMIT": {offset: "0", count: "4"}});
+      let list = [];
+      for (element of set) {
+        list.push(await client.json.get(element));
+      }
+      res.status(200).send(list);
+    } else res.status(401).send();
+  } else res.status(401).send();
+});
+
+app.get('/inbox/applications', async function (req, res) {
+  if (req.user) {
+    if (req.user.type === "recruiter") {
+      let set = await client.zRangeByScore(req.user.email + ":inbox", "-inf", "+inf");
+      let list = [];
+      for (element of set) {
+        let job = await client.json.get(element);
+        job.job_id = element;
+        if (job != undefined || job != null) {
+          let app_info_list = [];
+          for (app_id of job.applications) {
+            let app_info = await client.json.get(app_id);
+            app_info.app_id = app_id;
+            app_info_list.push(app_info);
+          }
+          job.app_info_list = app_info_list;
+        }
+        list.push(job);
+      }
+      res.status(200).send(list);
+    } else res.status(401).send();
+  } else res.status(401).send();
+});
+
+app.post('/status/:app_id', async function (req, res) {
+  if (req.user) {
+    if (req.body != "select status")
+      client.json.set(decodeURI(req.params.app_id), "$.status", req.body.status);
+    res.status(201).send();
+  } else res.status(401).send();
+});
+
+app.get('/inbox/reset/:job_id', async function (req, res) {
+  client.json.set(req.params.job_id, "$.new_app_count", 0);
 });
 
 // get job by job id
@@ -375,7 +441,7 @@ app.get('/jobs', async function (req, res) {
     job.saved = false;
     job.applied = false;
     for (k in user.saved_jobs) {
-      if (user.saved_jobs[k].job_id == job.job_id) {
+      if (user.saved_jobs[k] == job.job_id) {
         job.saved = true;
         break;
       }
@@ -395,8 +461,8 @@ app.get('/jobs', async function (req, res) {
 app.post('/save_job', async function (req, res) {
   check = await client.json.get(decodeURI(req.cookies['UserEmail']));
   if (check.saved_jobs == null) {
-    client.json.set(decodeURI(req.cookies['UserEmail']), "$.saved_jobs", [req.body]);
-  } else client.json.arrAppend(decodeURI(req.cookies['UserEmail']), "$..saved_jobs", req.body);
+    client.json.set(decodeURI(req.cookies['UserEmail']), "$.saved_jobs", [req.body.job_id]);
+  } else client.json.arrAppend(decodeURI(req.cookies['UserEmail']), "$..saved_jobs", req.body.job_id);
   res.status(201);
   res.send();
 });
@@ -404,7 +470,7 @@ app.post('/save_job', async function (req, res) {
 app.delete('/save_job', async function (req, res) {
   user = await client.json.get(decodeURI(req.cookies['UserEmail']));
   for (i in user.saved_jobs) {
-    if (user.saved_jobs[i].job_id == req.body.job_id) {
+    if (user.saved_jobs[i] == req.body.job_id) {
       client.json.arrPop(decodeURI(req.cookies['UserEmail']), "$.saved_jobs", i);
       res.status(200).send();
     }
@@ -415,10 +481,18 @@ app.delete('/save_job', async function (req, res) {
 app.get('/saved_jobs', async function (req, res) {
   user = await client.json.get(decodeURI(req.cookies['UserEmail']));
   res.setHeader('content-type', 'application/json');
-  if(user.submitted_apps === undefined){
-    res.status(200).send([{'msg':'no'}]);
+  if(user.saved_jobs === null){
+    res.status(200).send([]);
   }else{
-  res.status(200).send(user.saved_jobs);
+    const list = [];
+    if (user.saved_jobs != undefined) {
+      for (job of user.saved_jobs) {
+        const saved_job = await client.json.get(job);
+        if (saved_job != null)
+          list.push(await client.json.get(job));
+      }
+    }
+    res.status(200).send(list);
   }
 });
 

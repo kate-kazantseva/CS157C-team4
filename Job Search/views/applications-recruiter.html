@@ -1,69 +1,179 @@
-<html>
+<!doctype html>
+<html lang="en">
     <head>
         <script>
+            fetch('/inbox/applications').then(res => res.json()).then(json => {
+                if (json === []) {
+                  const newDiv = document.createElement("div");
+                  const br = document.createElement("BR")
+                  var h3 = document.createElement('h3');
+                  const link = document.createTextNode('You do not have any job listings at this time!!')
+                  h3.appendChild(link)
+                  const container = document.getElementById("joblistings");
+                  newDiv.appendChild(br)
+                  newDiv.appendChild(br)
+                  newDiv.appendChild(br)
+                  newDiv.appendChild(h3)
+                  container.appendChild(newDiv);
+                  return;
+                }
+                json.forEach(element => {
+                  console.log(element);
+                  const newDiv = document.createElement("div");
+                  const infoDiv = document.createElement("div");
+                  const newCountDiv = document.createElement("div");
+                  const link = document.createTextNode(element.job_title);
+                  const name = document.createTextNode(element.company_name);
+                  const loc = document.createTextNode(element.location);
+                  const count = document.createTextNode(element.new_app_count);
+                  var h5 = document.createElement('h5');
+                  h5.appendChild(link);
+                  infoDiv.appendChild(h5);
+                  var h4 = document.createElement('h6');
+                  h4.appendChild(name);
+                  infoDiv.appendChild(h4);
+                  var h4 = document.createElement('h6');
+                  h4.appendChild(loc);
+                  infoDiv.appendChild(h4);
+                  const p = document.createElement('p');
+                  p.style.fontSize = "20px";
+                  p.appendChild(count);
+                  newCountDiv.appendChild(p);
+                  const container = document.getElementById("joblistings");
+                  container.appendChild(newDiv);
+                  newDiv.classList.add('joblisting');
+                  infoDiv.style.display = "inline-block";
+                  newCountDiv.style.display = "inline-block";
+                  newCountDiv.style.float = "right";
+                  newCountDiv.style.borderRadius = "50%";
+                  newCountDiv.style.borderBlockColor = "000000";
+                  newCountDiv.style.borderStyle = "solid";
+                  newCountDiv.style.borderWidth = "1px";
+                  newCountDiv.style.width = "40px";
+                  newCountDiv.style.height = "40px";
+                  newCountDiv.style.margin = "18px";
+                  newCountDiv.style.paddingTop = "5px";
+                  newCountDiv.style.textAlign = "center";
+                  newDiv.appendChild(infoDiv);
+                  newDiv.appendChild(newCountDiv);
+                  var apps = element.app_info_list;
+                  apps.reverse();
+                  newDiv.addEventListener("click",function() {
+                    fetch('/inbox/reset/' + element.job_id);
+                    newCountDiv.innerHTML = "";
+                    const count = document.createTextNode("0");
+                    p.innerHTML = "";
+                    p.appendChild(count);
+                    newCountDiv.appendChild(p);
+                    var app_cont = document.getElementById('app');
+                    app_cont.innerHTML = "";
+                    apps.forEach(application => {
+                      var full_info = document.createElement("div");
+                      var appDiv = document.createElement("div");
+                      var statusDiv = document.createElement("div");
+                      var h3 = document.createElement('h3');
+                      var first_name = document.createTextNode(application.first_name + " ");
+                      h3.appendChild(first_name);
+                      var last_name = document.createTextNode(application.last_name);
+                      h3.appendChild(last_name);
+                      var h6 = document.createElement('h6');
+                      var email = document.createTextNode("Email: " + application.email);
+                      h6.appendChild(email);
+                      appDiv.appendChild(h3);
+                      appDiv.appendChild(h6);
+                      var select = document.createElement("select");
+                      select.classList.add("form-select");
+                      select.ariaLabel = "select status";
+                      select.id = "select";
+                      var selected = document.createElement("option");
+                      selected.selected = true;
+                      selected.innerHTML = "select status";
+                      var accepted = document.createElement("option");
+                      var rejected = document.createElement("option");
+                      var seen = document.createElement("option");
+                      accepted.innerHTML = "accepted";
+                      rejected.innerHTML = "rejected";
+                      seen.innerHTML = "seen";
+                      accepted.value = "accepted";
+                      rejected.value = "rejected";
+                      seen.value = "seen";
+                      accepted.name = "status";
+                      rejected.name = "status";
+                      seen.name = "status";
+                      selected.name = "status";
+                      select.appendChild(selected);
+                      select.appendChild(accepted);
+                      select.appendChild(rejected);
+                      select.appendChild(seen);
+                      var bold = document.createElement("b");
+                      h6 = document.createElement('h6');
+                      var status_label = document.createTextNode("Select status of application:");
+                      bold.appendChild(status_label);
+                      h6.appendChild(bold);                      
+                      statusDiv.appendChild(h6);
+                      statusDiv.appendChild(select);
+                      full_info.appendChild(appDiv);
+                      full_info.appendChild(statusDiv);
+                      select.addEventListener("change", function() {
+                        let value = document.getElementById("select").value;
+                        console.log(value);
+                        fetch("/status/" + encodeURIComponent(application.app_id),
+                              {
+                                method: "POST",
+                                body: '{ "status": ' + JSON.stringify(value) + '}',
+                                headers: {'Content-Type': 'application/json'}
+                              });
+                      });
+                      full_info.style.marginBottom = "30px";
+                      app_cont.appendChild(full_info);
+                    });
+
+                  })
+                });
+            });
         </script>
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="/css/base.css">
-        <link rel="stylesheet" type="text/css" href="/css/applications-recruiter.css">
-        <title>Jobs</title>
+        <link rel="stylesheet" type="text/css" href="/css/jobsviewer.css">
+        <title>Saved Jobs</title>
     </head>
     <body>
-      <div class="navbar navbar-expand-lg navbar-dark bg-dark" role="navigation">
-        <a class="navbar-brand" href="/homepage">Job Search</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav ml-auto">
-  
-              <li class="nav-item">
-                  <a class="nav-link" href="/my_joblistings">Jobs</a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link" href="/joblisting/create">Create job listing</a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link" href="/recruiter/applications">Applications</a>
-              </li>
-              <li class="nav-item">
-                  <!-- Replace with person icon-->
-                  <a class="nav-link" href="/settings">Settings</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/logout">Logout</a>
-              </li>
-              </ul>
-          </div>
-      </div>
-      <h1>Applications</h1>
+        <div class="navbar navbar-expand-lg navbar-dark bg-dark" role="navigation">
+            <a class="navbar-brand" href="/homepage">Job Search</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav ml-auto">
       
-      <div class="container">
-        <div class="applications-container" id="apps-container">
-          <div class ="application" id="app">
-            <div class="app info">
-                John Smith<br>
-                San Jose State University<br>
-                <a href="#">resume</a><br>
-                Applying for: QA Engineer
-            </div>
-            <div class="app info">Status: pending</div>
+                  <li class="nav-item">
+                      <a class="nav-link" href="/my_joblistings">Jobs</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link" href="/joblisting/create">Create job listing</a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link" href="/recruiter/applications">Applications</a>
+                  </li>
+                  <li class="nav-item">
+                      <!-- Replace with person icon-->
+                      <a class="nav-link" href="/settings">Settings</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="/logout">Logout</a>
+                  </li>
+                  </ul>
+              </div>
           </div>
+        <h1>Applications</h1>
+        <div class="container">
+            <div class="jobs-container" id="joblistings" style="width: 400px;">
+            </div>
+            <div class="view-job" id="app">
+            </div>
         </div>
-        
-        <div class="view-app" id="view-app">
-            John Smith <br>
-            <select class="form-select" aria-label="select status">
-                <option selected>select status</option>
-                <option value="1">accepted</option>
-                <option value="2">rejected</option>
-                <option value="3">seen</option>
-            </select>
-            <br>
-            application info
-        </div>
-      </div>
     </body>
 </html>

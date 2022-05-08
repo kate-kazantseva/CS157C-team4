@@ -111,6 +111,23 @@
                     newDiv.appendChild(infoDiv);
                     newDiv.appendChild(buttonDiv);
                 })});
+
+                window.onload = function () {
+                  let loc = document.getElementById("location");
+                  let find_jobs = document.getElementById("find_jobs");
+                  let type = document.getElementById("type");
+                  let search = document.getElementById("search");                
+                  find_jobs.addEventListener("click", function() {
+                    fetch('/joblistings/search/', 
+                          {
+                            method: "POST",
+                            body: '{ "search": ' + JSON.stringify(search.value) +
+                                  ', "type": ' + JSON.stringify(type.value) + 
+                                  ', "location": ' + JSON.stringify(loc.value) + '}',
+                            headers: {'Content-Type': 'application/json'}
+                          }).then(res => res.json()).then(json => console.log(json));
+                  });
+                }
         </script>
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
@@ -154,7 +171,7 @@
 
         <h1>Search jobs</h1>
         <!-- Search bar-->
-        <form method="post" action="/joblistings/search/" name= "jobsearch-form" id="jobsearch-form">
+        <div id="jobsearch-form">
           <div class="form-group row search-block">
             <div class="col-xs-4 search-item">
               <input type="text" name="search" class="form-control search-item" id="search" placeholder="Job title" aria-label="Search">
@@ -190,10 +207,10 @@
               </select>
             </div> -->
             <div class="col-xs-2 search-item">
-              <button class="btn-secondary" type="submit" value="Search">Find jobs</button>
+              <button class="btn-secondary" value="Search" id="find_jobs">Find jobs</button>
             </div>
           </div>
-        </form>
+        </div>
 
         <!--Jobs-->
         <div class="container">

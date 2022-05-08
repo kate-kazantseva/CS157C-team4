@@ -20,8 +20,8 @@
                   if(element.msg){
                     const newDiv = document.createElement("div");
                     const br = document.createElement("BR")
-                    var h3 = document.createElement('h4');
-                    const link = document.createTextNode('You do not have any applications at this time!!')
+                    var h3 = document.createElement('h6');
+                    const link = document.createTextNode('You do not have any applications at this time')
                     h3.appendChild(link)
                     const container = document.getElementById("applications");
                     newDiv.appendChild(br)
@@ -60,29 +60,29 @@
 
       // saved jobs
       fetch('/saved_jobs').then(res => res.json()).then(json => {
+              if (json.length == 0) {
+                const newDiv = document.createElement("div");
+                const br = document.createElement("BR")
+                var h3 = document.createElement('h6');
+                const link = document.createTextNode('You do not have any saved jobs at this time')
+                h3.appendChild(link)
+                const container = document.getElementById("savedjobs");
+                newDiv.appendChild(br)
+                newDiv.appendChild(br)
+                newDiv.appendChild(br)
+                newDiv.appendChild(h3)
+                container.appendChild(newDiv);
+              } else {
                 let flag = false;
                 json.reverse();
                 json.forEach((element,i) => {
-                  if(element.msg){
-          const newDiv = document.createElement("div");
-                    const br = document.createElement("BR")
-                    var h3 = document.createElement('h4');
-                    const link = document.createTextNode('You do not have any saved jobs at this time!!')
-                  h3.appendChild(link)
-                  const container = document.getElementById("savedjobs");
-                  newDiv.appendChild(br)
-                  newDiv.appendChild(br)
-                  newDiv.appendChild(br)
-                  newDiv.appendChild(h3)
-                  container.appendChild(newDiv);
-        }else{
-                  if(flag){
-                    return;
-                  }
-                  if(i>3){
-                    flag = true;
-                    return
-                  }
+                    if(flag){
+                      return;
+                    }
+                    if(i>3){
+                      flag = true;
+                      return
+                    }
                     const newDiv = document.createElement("div");
                     const link = document.createTextNode(element.job_title)
                     const loc = document.createTextNode(element.location)
@@ -99,9 +99,8 @@
                     const container = document.getElementById("savedjobs");
                     container.appendChild(newDiv);
                     newDiv.classList.add('panel-item')
-                }
-
                 });
+              }
             });
 
             // jobs
