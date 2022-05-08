@@ -509,7 +509,16 @@ app.get('/saved_jobs', async function (req, res) {
 });
 
 app.post('/apply/:id', async function (req, res) {
-  if (req.user) {
+  if (decodeURI(req.cookies['UserEmail'])) {
+    res.render('main', {layout : 'application', job_title: req.body.job_title,
+                                                job_id: req.params.id});
+  } else {
+    res.redirect('login');
+  }
+});
+
+app.get('/apply/:id', async function (req, res) {
+  if (decodeURI(req.cookies['UserEmail'])) {
     res.render('main', {layout : 'application', job_title: req.body.job_title,
                                                 job_id: req.params.id});
   } else {

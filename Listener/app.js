@@ -27,18 +27,19 @@ async function notify(job_id) {
     for (i in results.members) {
       let subscriber = await client.json.get(results.members[i]);
       let keys = subscriber.sub_keys["mountain_view_ca"];
-      console.log(keys);
       for (key of keys) {
         key.toLowerCase();
-        console.log(key);
-        console.log(title);
+        let email_body = "<h2>This might interest you: " + job.job_title + " in " + job.location + "</h2>";
+        email_body = email_body + "<p>Job Type: " + job.job_type + "</p><p>Salary range: " + 
+                     job.salary_range_start +  " - " + job.salary_range_end + " per " + job.salary_type +
+                     "</p><p>Experience: " + job.experience + "</p><p>" + job.description + "<p>Minimum qualifications: " + job.m_qualifications +
+                     "</p><p>Preferred qualifications: " + job.p_qualifications + "</p>" + "<a href='http://localhost:3000/apply/" + job_id +"'>Apply</a>";
         if (title.includes(key)) {
-          console.log("SENDING EMAIL");
           const mailOptions = {
             from: 'jobsearch@gmail.com',
             to: results.members[i],
             subject: 'New Job Notification',
-            text: "This might be interesting for you: " + job.job_title + " in " + job.location,
+            html: email_body
           };
         
           transporter.sendMail(mailOptions, function(error, info) {

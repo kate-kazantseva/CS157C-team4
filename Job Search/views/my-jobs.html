@@ -3,7 +3,8 @@
     <head>
         <script>
             fetch('/created_jobs').then(res => res.json()).then(json => {
-                if (json === []) {
+                console.log(json);
+                if (json == []) {
                     const newDiv = document.createElement("div");
                     const br = document.createElement("BR")
                     var h3 = document.createElement('h3');
@@ -15,6 +16,7 @@
                     newDiv.appendChild(br)
                     newDiv.appendChild(h3)
                     container.appendChild(newDiv);
+                    return;
                 }
                 json.forEach(element => {
                     const newDiv = document.createElement("div");
