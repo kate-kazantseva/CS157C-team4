@@ -15,6 +15,22 @@
                 type.value = json.type
           
       });
+
+    window.onload = function() {
+      const keywords = document.getElementById("key");
+      const loc = document.getElementById("loc");
+      const sub_button = document.getElementById("sub-button");
+      sub_button.addEventListener("click", function () {
+        fetch('/subscribe', 
+              {
+                method: "POST",
+                body: '{ "key": ' + JSON.stringify(keywords.value) + ', "loc":' + JSON.stringify(loc.value) + '}',
+                headers: {'Content-Type': 'application/json'}
+              }).then(function(){keywords.value = ""; loc.value = "";});
+
+      });
+    } 
+
   </script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
@@ -88,6 +104,22 @@
             </div>
             <input type="submit" class="btn btn-primary" value="Save changes"><br><br>
             </form> 
+        </div>
+        <div id="sub-box" style="width: 300; margin-left: 200">
+          <h4 style="text-align: center;">Subscriptions</h4>
+          <p style="text-align: center;">Subscribe to receive email notifications when new jobs are posted</p>
+          Keywords
+          <div class="form-row" style="margin-top: 5;">
+            <input type="key" name="key" id="key" aria-describedby="Keywords" placeholder="engineer" value="" size="40" class="line-input"/>
+          </div>
+          Location
+          <div class="form-row" style="margin-top: 5;">
+            <input type="location" name="loc" id="loc" aria-describedby="Location" placeholder="Mountain View, CA" value="" size="40" class="line-input"/>
+          </div>
+          <input class="btn btn-primary" style="width: 200; height: 30; margin-left: 50;" value="Subscribe" id="sub-button"><br><br>
+        </div>
+        <div hidden>
+          <h5 style="text-align: center;">Current Subscriptions</h5>
         </div>
     </div>
 </body>

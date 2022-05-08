@@ -364,6 +364,14 @@ app.post('/joblisting/create', async function(req,res,next){
   if (check.created_jobs == null) {
     client.json.set(decodeURI(req.cookies['UserEmail']), "$.created_jobs", [job_id]);
   } else client.json.arrAppend(decodeURI(req.cookies['UserEmail']), "$..created_jobs", job_id);
+  const loc = req.body.location.split(",");
+  loc[0] = loc[0].toLowerCase().replace(" ", "_");
+  var channelName = "ch:" + loc[0];
+  if (loc[1] != undefined && loc[1] != null) {
+    loc[1] = loc[1].toLowerCase().replace(" ", "");
+    channelName = "ch:" + loc[0] + "_" + loc[1];
+  }
+  client.publish(channelName, job_id);
   client.zAdd(req.user.email + ":inbox", {score: -Date.now(), value: job_id});
   res.redirect('/homepage');
 });
@@ -387,19 +395,23 @@ app.get('/inbox/applications', async function (req, res) {
     if (req.user.type === "recruiter") {
       let set = await client.zRangeByScore(req.user.email + ":inbox", "-inf", "+inf");
       let list = [];
-      for (element of set) {
-        let job = await client.json.get(element);
-        job.job_id = element;
-        if (job != undefined || job != null) {
-          let app_info_list = [];
-          for (app_id of job.applications) {
-            let app_info = await client.json.get(app_id);
-            app_info.app_id = app_id;
-            app_info_list.push(app_info);
+      if (set != undefined) {
+        for (element of set) {
+          let job = await client.json.get(element);
+          job.job_id = element;
+          if (job != undefined || job != null) {
+            let app_info_list = [];
+            if (job.applicatins != undefined) {
+              for (app_id of job.applications) {
+                let app_info = await client.json.get(app_id);
+                app_info.app_id = app_id;
+                app_info_list.push(app_info);
+              }
+            }
+            job.app_info_list = app_info_list;
           }
-          job.app_info_list = app_info_list;
+          list.push(job);
         }
-        list.push(job);
       }
       res.status(200).send(list);
     } else res.status(401).send();
@@ -667,6 +679,64 @@ app.get('/user', async function (req, res) {
   res.setHeader('content-type', 'application/json');
   res.status(200).send(user);
 });
+
+app.post('/subscribe', async function(req, res) {
+  //decode location and add user to notification list
+  //list port_number (corresponds to location) that holds users
+  //app that listens to channel will get users to notify from the list
+  //TODO: add sub list to users for subscription management 
+  if (req.user) {
+    const channel = decodeURI(req.body.loc).split(',');
+    channel[0] = channel[0].toLowerCase().replace(" ","_");
+    var channelName = channel[0];
+    if (channel[1] != undefined && channel[1] != null) {
+      channel[1] = channel[1].toLocaleLowerCase().replace(" ", "");
+      channelName = channel[0] + "_" + channel[1];
+    }
+    const user = await client.json.get(req.user.email);
+    if (user.sub_keys == undefined) {
+      const obj = {};
+      obj[channelName] = [req.body.key];
+      client.json.set(req.user.email, "$.sub_keys", obj);
+    } else {
+      if (user.sub_keys[channelName] != undefined) {
+        client.json.arrAppend(req.user.email, "$.sub_keys." + channelName, req.body.key)
+      } else
+        client.json.set(req.user.email, "$.sub_keys." + channelName, [req.body.key]);
+    }
+    client.sAdd(channelName, req.user.email);
+    res.status(201).send();
+  } else {
+    res.status(401).send();
+  }
+});
+
+app.delete('/unsubscribe', async function (req, res) {
+  if (req.user) {
+    const channel = decodeURI(req.body.loc).split(',');
+    channel[0] = channel[0].toLowerCase().replace(" ","_");
+    var channelName = "subs:" + channel[0];
+    if (channel[1] != undefined && channel[1] != null) {
+      channel[1] = channel[1].toLocaleLowerCase().replace(" ", "");
+      channelName = "subs:" + channel[0] + "_" + channel[1];
+    }
+    const idx = await client.json.arrIndex(channelName, ".$" + req.user.email, req.body.key);
+    client.json.arrPop(channelName, ".$" + req.user.email, idx);
+    res.status(200).send();
+  } else {
+    res.status(401).send();
+  }
+});
+
+/*
+app.get('/subscriptions', async function (req, res) {
+  if (req.user) {
+    if (req.user.type === "student") {
+      const sub_list = await client.json.get();
+    }
+  } else res.status(401).send();
+})
+*/
 
 app.listen(port, function(){
     console.log('Server started on port ' + port);
