@@ -62,6 +62,7 @@
                       var appDiv = document.createElement("div");
                       var statusDiv = document.createElement("div");
                       var h3 = document.createElement('h3');
+                      full_info.classList.add('applicant');
                       var first_name = document.createTextNode(application.first_name + " ");
                       h3.appendChild(first_name);
                       var last_name = document.createTextNode(application.last_name);
@@ -169,7 +170,6 @@
                         
                       });
                       full_info.appendChild(view_app_button);
-                      full_info.style.marginBottom = "30px";
                       app_cont.appendChild(full_info);
                     });
 

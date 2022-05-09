@@ -34,6 +34,13 @@
     background-color:#FAFAFA;
 }
 
+.applicant{
+    padding:1rem 0rem 1rem 0rem;
+    border-bottom-style:solid;
+    border-color:lightgray;
+    border-width: 0.1rem;
+}
+
 .view-app{
     width:30%;
     height:40rem;
@@ -67,7 +74,7 @@
     display:inline-block;
     float:right;
     border-radius: 50%;
-    border-color:black;
+    border-color:lightgray;
     border-style:solid;
     border-width:1px;
     width:40px;
