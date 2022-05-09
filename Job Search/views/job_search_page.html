@@ -4,7 +4,6 @@
         <script>
 
             fetch('/jobs').then(res => res.json()).then(json => { 
-                console.log(json);
                 json.forEach((element, i) => {
                     const newDiv = document.createElement("div");
                     const infoDiv = document.createElement("div");
@@ -131,7 +130,6 @@
                             let jobs_container = document.getElementById("jobs");
                             // display results
                             jobs_container.innerHTML = "";
-                            console.log(json.documents);
                             var search_results = json.documents;
                             search_results.forEach((element, i) =>{
                               const newDiv = document.createElement("div");
@@ -238,13 +236,7 @@
                               jobs_container.appendChild(newDiv);
                               newDiv.appendChild(infoDiv);
                               newDiv.appendChild(buttonDiv);
-                              console.log(element.value.job_title);
                             }) 
-                            
-                            
-                            //const title = document.createTextNode(json.job_title);
-                            //var h3 = document.createElement('h5');
-                            //h3.appendChild(title);
                           });
                   });
                 }

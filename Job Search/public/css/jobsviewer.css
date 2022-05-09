@@ -3,28 +3,33 @@
     align-content:space-between;
     justify-content:flex-start;
     margin-top:2rem;
+    border-top-style:solid;
+    border-bottom-style:solid;
+    border-color:lightgray;
+    border-width:0.1rem;
 }
 
 .jobs-container{
     display:flex;
     flex-direction:column;
-    height:30rem;
+    height:40rem;
     width:50%;
     overflow:auto;
-    padding:1rem;
     border-right-style:solid;
     border-color:lightgray;
+    border-width:0.1rem;
 }
 
 .joblisting{
     padding:1.5rem;
-    border-style:solid;
+    border-bottom-style:solid;
     border-color:lightgray;
     border-width:0.1rem;
 }
 
 .joblisting:hover{
     cursor:pointer;
+    background-color:#FAFAFA;
 }
 
 .view-job{

@@ -42,10 +42,26 @@
                     h3.appendChild(title);
                     full_info.appendChild(h3);
                     // apply button
-                    const apply_button = document.createElement("button");
+                    var form = document.createElement("form");
+                    var apply_button = document.createElement("input");
+                    var hidden_data = document.createElement("input");
+                    hidden_data.type = "hidden";
+                    hidden_data.name = "job_title";
+                    hidden_data.value = element.job_title;
+                    form.method = "POST";
+                    form.action = "/apply/" + element.job_id;
+                    apply_button.type = "submit";
+                    if (element.applied) {
+                      apply_button.disabled = true;
+                      apply_button.value = "Applied";
+                    }
+                    else{
+                      apply_button.value = "Apply";
+                    }
                     apply_button.classList.add("btn-primary");
-                    apply_button.innerHTML = "Apply";
-                    full_info.appendChild(apply_button);
+                    form.appendChild(hidden_data);
+                    form.appendChild(apply_button);
+                    full_info.appendChild(form);
                     full_info.appendChild(document.createElement("br"));
                     // job info
                     var sal = document.createTextNode("Salary range: " + element.salary_range_start +  " - " + element.salary_range_end + " per " + element.salary_type);
