@@ -4,6 +4,7 @@
         <script>
 
             fetch('/jobs').then(res => res.json()).then(json => { 
+                console.log(json);
                 json.forEach((element, i) => {
                     const newDiv = document.createElement("div");
                     const infoDiv = document.createElement("div");
@@ -113,6 +114,7 @@
                 })});
 
                 window.onload = function () {
+                  
                   let loc = document.getElementById("location");
                   let find_jobs = document.getElementById("find_jobs");
                   let type = document.getElementById("type");
@@ -125,7 +127,125 @@
                                   ', "type": ' + JSON.stringify(type.value) + 
                                   ', "location": ' + JSON.stringify(loc.value) + '}',
                             headers: {'Content-Type': 'application/json'}
-                          }).then(res => res.json()).then(json => console.log(json));
+                          }).then(res => res.json()).then(json => {
+                            let jobs_container = document.getElementById("jobs");
+                            // display results
+                            jobs_container.innerHTML = "";
+                            console.log(json.documents);
+                            var search_results = json.documents;
+                            search_results.forEach((element, i) =>{
+                              const newDiv = document.createElement("div");
+                              const infoDiv = document.createElement("div");
+                              newDiv.id = element.id;
+                              newDiv.classList.add("joblisting")
+                              const link = document.createTextNode(element.value.job_title)
+                              const loc = document.createTextNode(element.value.location)
+                              const name = document.createTextNode(element.value.company_name)
+                              var h3 = document.createElement('h5');
+                              h3.appendChild(link)
+                              infoDiv.appendChild(h3);
+                              var h4 = document.createElement('h6')
+                              h4.appendChild(name)
+                              infoDiv.appendChild(h4)
+                              var h4 = document.createElement('h6')
+                              h4.appendChild(loc)
+                              infoDiv.appendChild(h4)
+                              const buttonDiv = document.createElement("div");
+                              const save_button = document.createElement("button");
+                              save_button.classList.add("btn-success");
+                              if (!element.value.saved)
+                                  save_button.innerHTML = "Save Job";
+                              else
+                                  save_button.innerHTML = "Saved!";
+                              save_button.addEventListener("click", function () {
+                                  if (save_button.innerHTML == "Save Job") {
+                                      fetch('/save_job', { method: 'POST',
+                                                          body: JSON.stringify(element.value),
+                                                          headers: {'Content-Type': 'application/json'}
+                                                          }).then(response => { if (response.status == 201)
+                                                                              { save_button.innerHTML = "Saved!";}});
+                                  } else {
+                                      fetch('/save_job', { method: 'DELETE',
+                                                          body: JSON.stringify(element.value),
+                                                          headers: {'Content-Type': 'application/json'}
+                                                          }).then(response => { if (response.status == 200)
+                                                                              { save_button.innerHTML = "Save Job";}});
+                                  }
+                              });
+                              // display job listing info
+                              newDiv.addEventListener("click",function() {
+                                var full_info = document.getElementById('view-job');
+                                full_info.innerHTML = "";
+                                var h3 = document.createElement('h3');
+                                var title = document.createTextNode(element.value.job_title);
+                                h3.appendChild(title);
+                                full_info.appendChild(h3);
+                                var h5 = document.createElement('h5');
+                                var company = document.createTextNode(element.value.company_name);
+                                h5.appendChild(company);
+                                full_info.appendChild(h5);
+                                // apply button
+                                var form = document.createElement("form");
+                                var apply_button = document.createElement("input");
+                                var hidden_data = document.createElement("input");
+                                hidden_data.type = "hidden";
+                                hidden_data.name = "job_title";
+                                hidden_data.value = element.value.job_title;
+                                form.method = "POST";
+                                form.action = "/apply/" + element.id;
+                                apply_button.type = "submit";
+                                apply_button.value = "Apply";
+                                if (element.value.applied) {
+                                  apply_button.disabled = true;
+                                  apply_button.value = "Applied";
+                                }
+                                apply_button.classList.add("btn-primary");
+                                form.appendChild(hidden_data);
+                                form.appendChild(apply_button);
+                                full_info.appendChild(form);
+                                full_info.appendChild(document.createElement("br"));
+                                // job info
+                                var sal = document.createTextNode("Salary range: " + element.value.salary_range_start +  " - " + element.salary_range_end + " per " + element.salary_type);
+                                full_info.appendChild(sal);
+                                full_info.appendChild(document.createElement("br"));
+                                var jbtype = document.createTextNode("Job type: " + element.value.job_type);
+                                full_info.appendChild(jbtype);
+                                full_info.appendChild(document.createElement("br"));
+                                var loc = document.createTextNode("Location: " + element.value.location);
+                                full_info.appendChild(loc);
+                                full_info.appendChild(document.createElement("br"));
+                                var exp = document.createTextNode("Experience: " + element.value.experience);
+                                full_info.appendChild(exp);
+                                full_info.appendChild(document.createElement("br"));
+                                var desc = document.createTextNode("Description: " + element.value.description);
+                                full_info.appendChild(desc);
+                                full_info.appendChild(document.createElement("br"));
+                                var minq = document.createTextNode("Minimum Qualifications: " + element.value.m_qualifications);
+                                full_info.appendChild(minq);
+                                full_info.appendChild(document.createElement("br"));
+                                var prefq = document.createTextNode("Preferred Qualifications: " + element.value.p_qualifications);
+                                full_info.appendChild(prefq);
+                                full_info.appendChild(document.createElement("br"));
+                                var expiration = document.createTextNode("Accepts application until: " + element.value.exp_date);
+                                full_info.appendChild(expiration);
+                                full_info.appendChild(document.createElement("br"));
+                              });
+                              infoDiv.style.display = "inline-block";
+                              buttonDiv.style.display = "inline-block";
+                              buttonDiv.style.float = "right";
+                              buttonDiv.appendChild(save_button);
+                              buttonDiv.style.marginTop = "20px";
+                              jobs_container.appendChild(newDiv);
+                              newDiv.appendChild(infoDiv);
+                              newDiv.appendChild(buttonDiv);
+                              console.log(element.value.job_title);
+                            }) 
+                            
+                            
+                            //const title = document.createTextNode(json.job_title);
+                            //var h3 = document.createElement('h5');
+                            //h3.appendChild(title);
+                          });
                   });
                 }
         </script>
