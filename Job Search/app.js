@@ -383,7 +383,9 @@ app.get('/inbox', async function (req, res) {
                                            "+inf", {"LIMIT": {offset: "0", count: "4"}});
       let list = [];
       for (element of set) {
-        list.push(await client.json.get(element));
+        let result = await client.json.get(element);
+        if (result != undefined || result != null)
+          list.push(result);
       }
       res.status(200).send(list);
     } else res.status(401).send();
@@ -449,22 +451,24 @@ app.get('/jobs', async function (req, res) {
   user = await client.json.get(decodeURI(req.cookies['UserEmail']));
   for (i in results.members) {
     job = await client.json.get(results.members[i]);
-    job.job_id = results.members[i];
-    job.saved = false;
-    job.applied = false;
-    for (k in user.saved_jobs) {
-      if (user.saved_jobs[k] == job.job_id) {
-        job.saved = true;
-        break;
+    if (job != null || job != undefined) {
+      job.job_id = results.members[i];
+      job.saved = false;
+      job.applied = false;
+      for (k in user.saved_jobs) {
+        if (user.saved_jobs[k] == job.job_id) {
+          job.saved = true;
+          break;
+        }
       }
-    }
-    for (k in user.submitted_apps) {
-      if (user.submitted_apps[k].job_id == job.job_id) {
-        job.applied = true;
-        break;
+      for (k in user.submitted_apps) {
+        if (user.submitted_apps[k].job_id == job.job_id) {
+          job.applied = true;
+          break;
+        }
       }
+      job_list.push(job);
     }
-    job_list.push(job);
   }
   res.setHeader('content-type', 'application/json');
   res.status(200).send(job_list);
@@ -500,14 +504,16 @@ app.get('/saved_jobs', async function (req, res) {
     if (user.saved_jobs != undefined) {
       for (job of user.saved_jobs) {
         const saved_job = await client.json.get(job);
-        saved_job.job_id = job;
-        if (saved_job != null)
-          for (job_app of user.submitted_apps) {
-            if (job_app.job_id == job) {
-              saved_job.applied = true;
-            } else saved_job.applied = false;
-          }
-          list.push(saved_job);
+        if (saved_job != null || saved_job != undefined) {
+          saved_job.job_id = job;
+          if (saved_job != null)
+            for (job_app of user.submitted_apps) {
+              if (job_app.job_id == job) {
+                saved_job.applied = true;
+              } else saved_job.applied = false;
+            }
+            list.push(saved_job);
+        }
       }
     }
     res.status(200).send(list);
@@ -674,8 +680,10 @@ app.get('/created_jobs', async function (req, res) {
     var job_info=[];
     for(i in user.created_jobs){
       var info = await client.json.get(user.created_jobs[i])
-      info.job_id = user.created_jobs[i]
-      job_info.push(info)
+      if (info != null || info != undefined) {
+        info.job_id = user.created_jobs[i]
+        job_info.push(info)
+      }
     }
     res.status(200).send(job_info);
   }
@@ -694,8 +702,10 @@ app.get('/most_recent_listings', async function (req, res) {
           if (job_info.length == 4)
             break;
           var info = await client.json.get(user.created_jobs[i])
-          info.job_id = user.created_jobs[i]
-          job_info.push(info)
+          if (info != undefined || info != null) {
+            info.job_id = user.created_jobs[i]
+            job_info.push(info)
+          }
         }
         res.status(200).send(job_info);
       }
