@@ -43,17 +43,7 @@
                   container.appendChild(newDiv);
                   newDiv.classList.add('joblisting');
                   infoDiv.style.display = "inline-block";
-                  newCountDiv.style.display = "inline-block";
-                  newCountDiv.style.float = "right";
-                  newCountDiv.style.borderRadius = "50%";
-                  newCountDiv.style.borderBlockColor = "000000";
-                  newCountDiv.style.borderStyle = "solid";
-                  newCountDiv.style.borderWidth = "1px";
-                  newCountDiv.style.width = "40px";
-                  newCountDiv.style.height = "40px";
-                  newCountDiv.style.margin = "18px";
-                  newCountDiv.style.paddingTop = "5px";
-                  newCountDiv.style.textAlign = "center";
+                  newCountDiv.classList.add('new-count');
                   newDiv.appendChild(infoDiv);
                   newDiv.appendChild(newCountDiv);
                   var apps = element.app_info_list;
@@ -107,7 +97,7 @@
                       select.appendChild(seen);
                       var bold = document.createElement("b");
                       h6 = document.createElement('h6');
-                      var status_label = document.createTextNode("Select status of application:");
+                      var status_label = document.createTextNode("Application status:");
                       bold.appendChild(status_label);
                       h6.appendChild(bold);                      
                       statusDiv.appendChild(h6);
@@ -124,6 +114,61 @@
                                 headers: {'Content-Type': 'application/json'}
                               });
                       });
+                      const view_app_button = document.createElement("button");
+                      view_app_button.innerHTML = "View application";
+                      view_app_button.classList.add("btn-primary");
+                      view_app_button.addEventListener("click", function(){
+                        var info = document.getElementById("full_app");
+                        info.innerHTML = "";
+                        var name = document.createTextNode(application.first_name + " " + application.last_name);
+                        var app_email = document.createTextNode("Email: " + application.email);
+                        var phone = document.createTextNode("Phone #: " + application.phone);
+                        var resume = document.createTextNode("Resume: " + application.resume);
+                        var education = document.createTextNode("Education: " + application.education);
+                        var major = document.createTextNode("Major: " + application.major);
+                        var grad = document.createTextNode("Grad date: " + application.grad_date);
+                        var curr_status = document.createTextNode("Current status: " + application.status);
+                        for(var x in application){
+                          console.log(x);
+                        }
+                        var h3 = document.createElement('h3');
+                        h3.appendChild(name);
+                        info.appendChild(h3);
+                        info.appendChild(curr_status);
+                        info.appendChild(document.createElement("br"));
+                        info.appendChild(app_email);
+                        info.appendChild(document.createElement("br"));
+                        info.appendChild(phone);
+                        info.appendChild(document.createElement("br"));
+                        info.appendChild(resume);
+                        info.appendChild(document.createElement("br"));
+                        info.appendChild(education);
+                        info.appendChild(document.createElement("br"));
+                        info.appendChild(major);
+                        info.appendChild(document.createElement("br"));
+                        info.appendChild(grad);
+                        if (application.title){
+                          info.appendChild(document.createElement("br"));
+                          info.appendChild(document.createElement("br"));
+                          var h4 = document.createElement('h5');
+                          h4.appendChild(document.createTextNode("Experience:"))
+                          var title = document.createTextNode("Title: " + application.title);
+                          var company_name = document.createTextNode("Company:" + application.comapny_name);
+                          var time_period = document.createTextNode("Time period: " + application.start_date + " - " + application.end_date);
+                          var desc = document.createTextNode("Description:" + application.description);
+                          info.appendChild(h4);
+                          info.appendChild(title);
+                          info.appendChild(document.createElement("br"));
+                          info.appendChild(company_name);
+                          info.appendChild(document.createElement("br"));
+                          info.appendChild(time_period);
+                          info.appendChild(document.createElement("br"));
+                          info.appendChild(desc);
+
+                        }
+                        
+                      });
+                      full_info.appendChild(view_app_button);
                       full_info.style.marginBottom = "30px";
                       app_cont.appendChild(full_info);
                     });
@@ -137,7 +182,7 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="/css/base.css">
-        <link rel="stylesheet" type="text/css" href="/css/jobsviewer.css">
+        <link rel="stylesheet" type="text/css" href="/css/applications-recruiter.css">
         <title>Applications</title>
     </head>
     <body>
@@ -170,9 +215,12 @@
           </div>
         <h1>Applications</h1>
         <div class="container">
-            <div class="jobs-container" id="joblistings" style="width: 400px;">
+            
+            <div class="jobs-container" id="joblistings">
             </div>
-            <div class="view-job" id="app">
+            <div class="view-app" id="app">
+            </div>
+            <div class="full-app" id="full_app">
             </div>
         </div>
     </body>
