@@ -727,10 +727,6 @@ app.get('/user', async function (req, res) {
 });
 
 app.post('/subscribe', async function(req, res) {
-  //decode location and add user to notification list
-  //list port_number (corresponds to location) that holds users
-  //app that listens to channel will get users to notify from the list
-  //TODO: add sub list to users for subscription management 
   if (req.user) {
     const channel = decodeURI(req.body.loc).split(',');
     channel[0] = channel[0].toLowerCase().replace(" ","_");
@@ -751,7 +747,10 @@ app.post('/subscribe', async function(req, res) {
         client.json.set(req.user.email, "$.sub_keys." + channelName, [req.body.key]);
     }
     client.sAdd(channelName, req.user.email);
-    res.status(201).send();
+    let response = {};
+    response["channel"] = channelName;
+    res.setHeader('Content-Type', 'application/json');
+    res.status(201).send(response);
   } else {
     res.status(401).send();
   }

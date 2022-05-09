@@ -111,7 +111,115 @@
                 method: "POST",
                 body: '{ "key": ' + JSON.stringify(keywords.value) + ', "loc":' + JSON.stringify(loc.value) + '}',
                 headers: {'Content-Type': 'application/json'}
-              }).then(function(){keywords.value = ""; loc.value = "";});
+              }).then(res => res.json())
+              .then(json => 
+              {
+                if (json.channel != undefined) {
+                  const curr_subs = document.getElementById("curr-subs");
+                  curr_subs.hidden = false;
+                  const channelDiv = document.getElementById(json.channel);
+                  if (channelDiv != undefined) {
+                    let keyDiv = document.createElement("div");
+                    p = document.createElement("p");
+                    let del_key = document.createElement("p");
+                    del_key.innerHTML = "x";
+                    del_key.style.width = "30";
+                    del_key.style.margin = "0";
+                    p.style.display = "inline";
+                    del_key.style.display = "inline";
+                    del_key.style.float = "right";
+                    del_key.id = keywords.value;
+                    del_key.style.cursor = "pointer";
+                    p.style.margin = "0";
+                    text = document.createTextNode(keywords.value);
+                    p.style.width = "230px";
+                    p.appendChild(text);
+                    keyDiv.appendChild(p);
+                    keyDiv.appendChild(del_key);
+                    channelDiv.appendChild(keyDiv);
+                    del_key.addEventListener("click", function () {              
+                      fetch('/unsubscribe',
+                            {
+                              method: "DELETE",
+                              body: '{ "channel": ' + JSON.stringify(channelDiv.id) + ', "key":' + JSON.stringify(keywords.value) + '}',
+                              headers: {'Content-Type': 'application/json'}
+                            }).then(res => {
+                                              if (res.status == 200) {
+                                                if (keyDiv.parentNode.childElementCount <= 3)
+                                                  if (keyDiv.parentNode.parentNode.childElementCount <= 2)
+                                                    keyDiv.parentNode.parentNode.remove();
+                                                  else keyDiv.parentNode.remove();
+                                                else keyDiv.remove();
+                                              }
+                                            }); 
+                    });
+                    curr_subs.appendChild(channelDiv);
+                  } else {
+                    const newDiv = document.createElement("div");
+                    newDiv.id = json.channel;
+                    let loc = json.channel.split("_");
+                    if (loc.length > 1)
+                      loc[loc.length - 1] = loc[loc.length - 1].toUpperCase();
+                    const parsed = [];
+                    loc.forEach((elem, idx) => {
+                      if (idx == loc.length - 1)
+                        parsed[idx] = elem.toUpperCase();
+                      else {
+                        parsed[idx] = elem.charAt(0).toUpperCase() + elem.slice(1);
+                      }
+                    });
+                    console.log(parsed);
+                    let p = document.createElement("p");
+                    let text = document.createTextNode("Location: " + parsed.join(" "));
+                    p.style.margin = "0";
+                    p.style.marginTop = "15";
+                    p.appendChild(text);
+                    newDiv.appendChild(p);
+                    const keys = document.createElement("p");
+                    text = document.createTextNode("Keywords: ");
+                    keys.style.margin = "0";
+                    keys.appendChild(text);
+                    newDiv.appendChild(keys);
+
+                    let keyDiv = document.createElement("div");
+                    p = document.createElement("p");
+                    let del_key = document.createElement("p");
+                    del_key.innerHTML = "x";
+                    del_key.style.width = "30";
+                    del_key.style.margin = "0";
+                    p.style.display = "inline";
+                    del_key.style.display = "inline";
+                    del_key.style.float = "right";
+                    del_key.id = keywords.value;
+                    del_key.style.cursor = "pointer";
+                    p.style.margin = "0";
+                    text = document.createTextNode(keywords.value);
+                    p.style.width = "230px";
+                    p.appendChild(text);
+                    keyDiv.appendChild(p);
+                    keyDiv.appendChild(del_key);
+                    newDiv.appendChild(keyDiv);
+                    del_key.addEventListener("click", function () {              
+                      fetch('/unsubscribe',
+                            {
+                              method: "DELETE",
+                              body: '{ "channel": ' + JSON.stringify(newDiv.id) + ', "key":' + JSON.stringify(keywords.value) + '}',
+                              headers: {'Content-Type': 'application/json'}
+                            }).then(res => {
+                                              if (res.status == 200) {
+                                                if (keyDiv.parentNode.childElementCount <= 3)
+                                                  if (keyDiv.parentNode.parentNode.childElementCount <= 2)
+                                                    keyDiv.parentNode.parentNode.remove();
+                                                  else keyDiv.parentNode.remove();
+                                                else keyDiv.remove();
+                                              }
+                                            }); 
+                    });
+                  curr_subs.appendChild(newDiv);
+                  }
+                }
+              }
+              );
       });
     } 
 
@@ -209,7 +317,7 @@
             
           </div>
           <div hidden id="curr-subs">
-            <h5 style="text-align: center; font-weight:bold;" id="curr-title">Current Subscriptions</h5>
+            <h5 style="text-align: center; font-weight:bold; vertical-align: top;" id="curr-title">Current Subscriptions</h5>
           </div>
         </div>
     </div>
