@@ -401,7 +401,7 @@ app.get('/inbox/applications', async function (req, res) {
           job.job_id = element;
           if (job != undefined || job != null) {
             let app_info_list = [];
-            if (job.applicatins != undefined) {
+            if (job.applications != undefined) {
               for (app_id of job.applications) {
                 let app_info = await client.json.get(app_id);
                 app_info.app_id = app_id;
