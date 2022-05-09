@@ -50,7 +50,12 @@
             p.appendChild(text);
             keys.appendChild(p);
           });
+          const unsub_button = document.createElement("button");
+          unsub_button.innerHTML="Unsubscribe";
+          unsub_button.classList.add("unsub-btn");
+          newDiv.appendChild(unsub_button);
           curr_subs.appendChild(newDiv);
+          
         });
       }
     });
@@ -90,6 +95,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/css/base.css">
+    <link rel="stylesheet" type="text/css" href="/css/settings-student.css">
     <title>User Settings</title>
     
 </head>
@@ -125,6 +131,7 @@
   </div>
     <h1>User Settings</h1> 
     <div class = "container">
+      <div class="empty"></div>
         <div class="center-box">
             <form action="/settings" method="post" name="form1">
               E-mail
@@ -158,24 +165,28 @@
             <input type="submit" class="btn btn-primary" value="Save changes"><br><br>
             </form> 
         </div>
-        <div id="sub-box" style="width: 300; height: 350; margin-left: 250;">
-          <div id="subscribe" style="width: 300; height: 350;">
-          <h4 style="text-align: center;">Subscribe</h4>
-          <p style="text-align: center;">Subscribe to receive email notifications when new jobs are posted</p>
-          Keywords
-          <div class="form-row" style="margin-top: 5;">
-            <input type="key" name="key" id="key" aria-describedby="Keywords" placeholder="engineer" value="" size="40" class="line-input"/>
-          </div>
-          Location
-          <div class="form-row" style="margin-top: 5;">
-            <input type="location" name="loc" id="loc" aria-describedby="Location" placeholder="Mountain View, CA" value="" size="40" class="line-input"/>
-          </div>
-          <input class="btn btn-primary" style="width: 200; height: 30; margin-left: 50; margin-bottom: -10px;" value="Subscribe" id="sub-button"><br><br>
+        <div class="sub-module">
+          <div id="sub-box">
+            <div id="subscribe">
+            <h4 style="font-weight:bold;">Subscriptions</h4>
+            <p >Subscribe to receive email notifications when new jobs are posted</p>
+            <label for="key">Keywords</label>
+            <div class="form-row">
+              <input type="key" name="key" id="key" aria-describedby="Keywords" placeholder="engineer" value="" size="40" class="line-input sub-input"/>
+            </div>
+            <label for="loc">Location</label>
+            <div class="form-row">
+              <input type="location" name="loc" id="loc" aria-describedby="Location" placeholder="Mountain View, CA" value="" size="40" class="line-input sub-input"/>
+            </div>
+            <input class="btn btn-primary sub-btn" value="Subscribe" id="sub-button"><br><br>
+            </div>
+            
           </div>
           <div hidden id="curr-subs">
-            <h5 style="text-align: center;" id="curr-title">Current Subscriptions</h5>
+            <h5 style="text-align: center; font-weight:bold;" id="curr-title">Current Subscriptions</h5>
           </div>
         </div>
     </div>
+    
 </body>
 </html>
