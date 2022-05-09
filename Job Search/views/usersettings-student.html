@@ -61,13 +61,18 @@
       const sub_button = document.getElementById("sub-button");
       sub_button.addEventListener("click", function () {
         if (keywords.value.trim().length <= 0 || loc.value.trim().length <= 0) {
+          let check = document.getElementById("alert-msg");
+          if (check != null) return;
           let alert_msg = document.createElement("p");
+          alert_msg.id = "alert-msg";
           let msg = document.createTextNode("Please enter keywords and location");
+          let subscribe = document.getElementById("subscribe");
           alert_msg.appendChild(msg);
           alert_msg.style.textAlign = "center";
           alert_msg.style.fontSize = "15";
+          alert_msg.style.margin = "0";
           let sub_box = document.getElementById("sub-box");
-          sub_box.appendChild(alert_msg);
+          subscribe.appendChild(alert_msg);
           return;
         }
         fetch('/subscribe', 
@@ -153,8 +158,9 @@
             <input type="submit" class="btn btn-primary" value="Save changes"><br><br>
             </form> 
         </div>
-        <div id="sub-box" style="width: 300; margin-left: 250;">
-          <h4 style="text-align: center;">Subscriptions</h4>
+        <div id="sub-box" style="width: 300; height: 350; margin-left: 250;">
+          <div id="subscribe" style="width: 300; height: 350;">
+          <h4 style="text-align: center;">Subscribe</h4>
           <p style="text-align: center;">Subscribe to receive email notifications when new jobs are posted</p>
           Keywords
           <div class="form-row" style="margin-top: 5;">
@@ -165,8 +171,9 @@
             <input type="location" name="loc" id="loc" aria-describedby="Location" placeholder="Mountain View, CA" value="" size="40" class="line-input"/>
           </div>
           <input class="btn btn-primary" style="width: 200; height: 30; margin-left: 50; margin-bottom: -10px;" value="Subscribe" id="sub-button"><br><br>
+          </div>
           <div hidden id="curr-subs">
-            <h5 style="text-align: center;">Current Subscriptions</h5>
+            <h5 style="text-align: center;" id="curr-title">Current Subscriptions</h5>
           </div>
         </div>
     </div>
