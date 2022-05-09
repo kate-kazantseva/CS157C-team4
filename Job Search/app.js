@@ -500,7 +500,13 @@ app.get('/saved_jobs', async function (req, res) {
     if (user.saved_jobs != undefined) {
       for (job of user.saved_jobs) {
         const saved_job = await client.json.get(job);
+        saved_job.job_id = job;
         if (saved_job != null)
+          for (job_app of user.submitted_apps) {
+            if (job_app.job_id == job) {
+              saved_job.applied = true;
+            } else saved_job.applied = false;
+          }
           list.push(saved_job);
       }
     }
