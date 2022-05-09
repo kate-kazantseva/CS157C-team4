@@ -35,11 +35,14 @@
           console.log(parsed);
           let p = document.createElement("p");
           let text = document.createTextNode("Location: " + parsed.join(" "));
+          p.style.margin = "0";
+          p.style.marginTop = "15";
           p.appendChild(text);
           newDiv.appendChild(p);
           console.log(json[key]);
           const keys = document.createElement("p");
           text = document.createTextNode("Keywords: ");
+          keys.style.margin = "0";
           keys.appendChild(text);
           newDiv.appendChild(keys);
           json[key].forEach(element => {
@@ -48,7 +51,7 @@
             p.style.marginBottom = "0";
             text = document.createTextNode(element);
             p.appendChild(text);
-            keys.appendChild(p);
+            newDiv.appendChild(p);
           });
           curr_subs.appendChild(newDiv);
         });
