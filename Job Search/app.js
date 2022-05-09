@@ -759,15 +759,15 @@ app.post('/subscribe', async function(req, res) {
 
 app.delete('/unsubscribe', async function (req, res) {
   if (req.user) {
-    const channel = decodeURI(req.body.loc).split(',');
-    channel[0] = channel[0].toLowerCase().replace(" ","_");
-    var channelName = "subs:" + channel[0];
-    if (channel[1] != undefined && channel[1] != null) {
-      channel[1] = channel[1].toLocaleLowerCase().replace(" ", "");
-      channelName = "subs:" + channel[0] + "_" + channel[1];
+    let user = await client.json.get(req.user.email);
+    let keys = user.sub_keys;
+    if (keys[req.body.channel].length == 1) {
+      client.json.del(req.user.email, "$.sub_keys." + req.body.channel);
+    } else {
+      let idx = keys[req.body.channel].indexOf(req.body.key);
+      if (idx != -1)
+        client.json.arrPop(req.user.email, "$.sub_keys." + req.body.channel, idx);
     }
-    const idx = await client.json.arrIndex(channelName, ".$" + req.user.email, req.body.key);
-    client.json.arrPop(channelName, ".$" + req.user.email, idx);
     res.status(200).send();
   } else {
     res.status(401).send();

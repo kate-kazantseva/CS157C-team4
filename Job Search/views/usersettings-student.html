@@ -46,19 +46,42 @@
           keys.appendChild(text);
           newDiv.appendChild(keys);
           json[key].forEach(element => {
+            let keyDiv = document.createElement("div");
             p = document.createElement("p");
-            p.id = element;
-            p.style.marginBottom = "0";
+            let del_key = document.createElement("p");
+            del_key.innerHTML = "x";
+            del_key.style.width = "30";
+            del_key.style.margin = "0";
+            p.style.display = "inline";
+            del_key.style.display = "inline";
+            del_key.style.float = "right";
+            del_key.id = element;
+            del_key.style.cursor = "pointer";
+            p.style.margin = "0";
             text = document.createTextNode(element);
+            p.style.width = "230px";
             p.appendChild(text);
-            newDiv.appendChild(p);
+            keyDiv.appendChild(p);
+            keyDiv.appendChild(del_key);
+            newDiv.appendChild(keyDiv);
+            del_key.addEventListener("click", function () {              
+              fetch('/unsubscribe',
+                    {
+                      method: "DELETE",
+                      body: '{ "channel": ' + JSON.stringify(newDiv.id) + ', "key":' + JSON.stringify(element) + '}',
+                      headers: {'Content-Type': 'application/json'}
+                    }).then(res => {
+                                      if (res.status == 200) {
+                                        if (keyDiv.parentNode.childElementCount <= 3)
+                                          if (keyDiv.parentNode.parentNode.childElementCount <= 2)
+                                            keyDiv.parentNode.parentNode.remove();
+                                          else keyDiv.parentNode.remove();
+                                        else keyDiv.remove();
+                                      }
+                                    }); 
+            });
           });
-          const unsub_button = document.createElement("button");
-          unsub_button.innerHTML="Unsubscribe";
-          unsub_button.classList.add("unsub-btn");
-          newDiv.appendChild(unsub_button);
           curr_subs.appendChild(newDiv);
-          
         });
       }
     });
