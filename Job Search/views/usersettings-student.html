@@ -2,19 +2,58 @@
 <head>
   <script>
     fetch('/user').then(res => res.json()).then(json => {
-
-        const first_name = document.getElementById("first_name")
-                first_name.value = json.first_name
-                const last_name = document.getElementById("last_name")
-                last_name.value = json.last_name
-                const email = document.getElementById("email")
-                email.value = json.email
-                const phone = document.getElementById("school")
-                school.value = json.school
-                const type = document.getElementById("type")
-                type.value = json.type
-          
+      const first_name = document.getElementById("first_name")
+      first_name.value = json.first_name
+      const last_name = document.getElementById("last_name")
+      last_name.value = json.last_name
+      const email = document.getElementById("email")
+      email.value = json.email
+      const phone = document.getElementById("school")
+      school.value = json.school
+      const type = document.getElementById("type")
+      type.value = json.type
       });
+
+    fetch('/subscriptions').then(res => res.json()).then(json => {
+      if (Object.keys(json).length > 0) {
+        const curr_subs = document.getElementById("curr-subs");
+        curr_subs.hidden = false;
+        Object.keys(json).forEach(key => {
+          const newDiv = document.createElement("div");
+          newDiv.id = key;
+          let loc = key.split("_");
+          if (loc.length > 1)
+            loc[loc.length - 1] = loc[loc.length - 1].toUpperCase();
+          const parsed = [];
+          loc.forEach((elem, idx) => {
+            if (idx == loc.length - 1)
+              parsed[idx] = elem.toUpperCase();
+            else {
+              parsed[idx] = elem.charAt(0).toUpperCase() + elem.slice(1);
+            }
+          });
+          console.log(parsed);
+          let p = document.createElement("p");
+          let text = document.createTextNode("Location: " + parsed.join(" "));
+          p.appendChild(text);
+          newDiv.appendChild(p);
+          console.log(json[key]);
+          const keys = document.createElement("p");
+          text = document.createTextNode("Keywords: ");
+          keys.appendChild(text);
+          newDiv.appendChild(keys);
+          json[key].forEach(element => {
+            p = document.createElement("p");
+            p.id = element;
+            p.style.marginBottom = "0";
+            text = document.createTextNode(element);
+            p.appendChild(text);
+            keys.appendChild(p);
+          });
+          curr_subs.appendChild(newDiv);
+        });
+      }
+    });
 
     window.onload = function() {
       const keywords = document.getElementById("key");
@@ -126,9 +165,9 @@
             <input type="location" name="loc" id="loc" aria-describedby="Location" placeholder="Mountain View, CA" value="" size="40" class="line-input"/>
           </div>
           <input class="btn btn-primary" style="width: 200; height: 30; margin-left: 50; margin-bottom: -10px;" value="Subscribe" id="sub-button"><br><br>
-        </div>
-        <div hidden>
-          <h5 style="text-align: center;">Current Subscriptions</h5>
+          <div hidden id="curr-subs">
+            <h5 style="text-align: center;">Current Subscriptions</h5>
+          </div>
         </div>
     </div>
 </body>

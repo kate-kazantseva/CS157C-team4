@@ -501,7 +501,7 @@ app.get('/saved_jobs', async function (req, res) {
       for (job of user.saved_jobs) {
         const saved_job = await client.json.get(job);
         if (saved_job != null)
-          list.push(await client.json.get(job));
+          list.push(saved_job);
       }
     }
     res.status(200).send(list);
@@ -623,8 +623,29 @@ app.post('/joblistings/search/', async function (req, res) {
     query = query+",@job_type:"+req.body.type+"*"
   }
   result = await client.ft.search(index_name, query);
+  job_list = [];
+  let user = await client.json.get(req.user.email);
   res.setHeader('content-type', 'application/json');
-  res.status(200).send(result);
+  result.documents.forEach((job) => {
+    let job_info = job.value;
+    job_info.saved = false;
+    job_info.applied = false;
+    job_info.job_id = job.id;
+    for (k in user.saved_jobs) {
+      if (user.saved_jobs[k] == job.id) {
+        job_info.saved = true;
+        break;
+      }
+    }
+    for (k in user.submitted_apps) {
+      if (user.submitted_apps[k].job_id == job.id) {
+        job_info.applied = true;
+        break;
+      }
+    }
+    job_list.push(job_info);
+  });
+  res.status(200).send(job_list);
 });
 
 app.get('/submitted_apps', async function (req, res) {
@@ -737,15 +758,16 @@ app.delete('/unsubscribe', async function (req, res) {
   }
 });
 
-/*
+
 app.get('/subscriptions', async function (req, res) {
   if (req.user) {
     if (req.user.type === "student") {
-      const sub_list = await client.json.get();
-    }
+      const user = await client.json.get(req.user.email);
+      res.status(200).send(user.sub_keys);
+    } else res.status(401).send();
   } else res.status(401).send();
 })
-*/
+
 
 app.listen(port, function(){
     console.log('Server started on port ' + port);

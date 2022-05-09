@@ -130,15 +130,15 @@
                             let jobs_container = document.getElementById("jobs");
                             // display results
                             jobs_container.innerHTML = "";
-                            var search_results = json.documents;
+                            var search_results = json;
                             search_results.forEach((element, i) =>{
                               const newDiv = document.createElement("div");
                               const infoDiv = document.createElement("div");
-                              newDiv.id = element.id;
+                              newDiv.id = element.job_id;
                               newDiv.classList.add("joblisting")
-                              const link = document.createTextNode(element.value.job_title)
-                              const loc = document.createTextNode(element.value.location)
-                              const name = document.createTextNode(element.value.company_name)
+                              const link = document.createTextNode(element.job_title)
+                              const loc = document.createTextNode(element.location)
+                              const name = document.createTextNode(element.company_name)
                               var h3 = document.createElement('h5');
                               h3.appendChild(link)
                               infoDiv.appendChild(h3);
@@ -151,20 +151,20 @@
                               const buttonDiv = document.createElement("div");
                               const save_button = document.createElement("button");
                               save_button.classList.add("btn-success");
-                              if (!element.value.saved)
+                              if (!element.saved)
                                   save_button.innerHTML = "Save Job";
                               else
                                   save_button.innerHTML = "Saved!";
                               save_button.addEventListener("click", function () {
                                   if (save_button.innerHTML == "Save Job") {
                                       fetch('/save_job', { method: 'POST',
-                                                          body: JSON.stringify(element.value),
+                                                          body: JSON.stringify(element),
                                                           headers: {'Content-Type': 'application/json'}
                                                           }).then(response => { if (response.status == 201)
                                                                               { save_button.innerHTML = "Saved!";}});
                                   } else {
                                       fetch('/save_job', { method: 'DELETE',
-                                                          body: JSON.stringify(element.value),
+                                                          body: JSON.stringify(element),
                                                           headers: {'Content-Type': 'application/json'}
                                                           }).then(response => { if (response.status == 200)
                                                                               { save_button.innerHTML = "Save Job";}});
@@ -175,11 +175,11 @@
                                 var full_info = document.getElementById('view-job');
                                 full_info.innerHTML = "";
                                 var h3 = document.createElement('h3');
-                                var title = document.createTextNode(element.value.job_title);
+                                var title = document.createTextNode(element.job_title);
                                 h3.appendChild(title);
                                 full_info.appendChild(h3);
                                 var h5 = document.createElement('h5');
-                                var company = document.createTextNode(element.value.company_name);
+                                var company = document.createTextNode(element.company_name);
                                 h5.appendChild(company);
                                 full_info.appendChild(h5);
                                 // apply button
@@ -188,12 +188,12 @@
                                 var hidden_data = document.createElement("input");
                                 hidden_data.type = "hidden";
                                 hidden_data.name = "job_title";
-                                hidden_data.value = element.value.job_title;
+                                hidden_data.value = element.job_title;
                                 form.method = "POST";
-                                form.action = "/apply/" + element.id;
+                                form.action = "/apply/" + element.job_id;
                                 apply_button.type = "submit";
                                 apply_button.value = "Apply";
-                                if (element.value.applied) {
+                                if (element.applied) {
                                   apply_button.disabled = true;
                                   apply_button.value = "Applied";
                                 }
@@ -203,28 +203,28 @@
                                 full_info.appendChild(form);
                                 full_info.appendChild(document.createElement("br"));
                                 // job info
-                                var sal = document.createTextNode("Salary range: " + element.value.salary_range_start +  " - " + element.salary_range_end + " per " + element.salary_type);
+                                var sal = document.createTextNode("Salary range: " + element.salary_range_start +  " - " + element.salary_range_end + " per " + element.salary_type);
                                 full_info.appendChild(sal);
                                 full_info.appendChild(document.createElement("br"));
-                                var jbtype = document.createTextNode("Job type: " + element.value.job_type);
+                                var jbtype = document.createTextNode("Job type: " + element.job_type);
                                 full_info.appendChild(jbtype);
                                 full_info.appendChild(document.createElement("br"));
-                                var loc = document.createTextNode("Location: " + element.value.location);
+                                var loc = document.createTextNode("Location: " + element.location);
                                 full_info.appendChild(loc);
                                 full_info.appendChild(document.createElement("br"));
-                                var exp = document.createTextNode("Experience: " + element.value.experience);
+                                var exp = document.createTextNode("Experience: " + element.experience);
                                 full_info.appendChild(exp);
                                 full_info.appendChild(document.createElement("br"));
-                                var desc = document.createTextNode("Description: " + element.value.description);
+                                var desc = document.createTextNode("Description: " + element.description);
                                 full_info.appendChild(desc);
                                 full_info.appendChild(document.createElement("br"));
-                                var minq = document.createTextNode("Minimum Qualifications: " + element.value.m_qualifications);
+                                var minq = document.createTextNode("Minimum Qualifications: " + element.m_qualifications);
                                 full_info.appendChild(minq);
                                 full_info.appendChild(document.createElement("br"));
-                                var prefq = document.createTextNode("Preferred Qualifications: " + element.value.p_qualifications);
+                                var prefq = document.createTextNode("Preferred Qualifications: " + element.p_qualifications);
                                 full_info.appendChild(prefq);
                                 full_info.appendChild(document.createElement("br"));
-                                var expiration = document.createTextNode("Accepts application until: " + element.value.exp_date);
+                                var expiration = document.createTextNode("Accepts application until: " + element.exp_date);
                                 full_info.appendChild(expiration);
                                 full_info.appendChild(document.createElement("br"));
                               });

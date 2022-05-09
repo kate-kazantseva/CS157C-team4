@@ -3,6 +3,7 @@
     <head>
         <script>
             fetch('/inbox/applications').then(res => res.json()).then(json => {
+              console.log(json);
                 if (json === []) {
                   const newDiv = document.createElement("div");
                   const br = document.createElement("BR")
