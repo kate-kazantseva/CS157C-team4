@@ -76,7 +76,6 @@
                       var select = document.createElement("select");
                       select.classList.add("form-select");
                       select.ariaLabel = "select status";
-                      select.id = "select";
                       var selected = document.createElement("option");
                       selected.selected = true;
                       selected.innerHTML = "select status";
@@ -107,7 +106,7 @@
                       full_info.appendChild(appDiv);
                       full_info.appendChild(statusDiv);
                       select.addEventListener("change", function() {
-                        let value = document.getElementById("select").value;
+                        let value = event.target.value;
                         console.log(value);
                         fetch("/status/" + encodeURIComponent(application.app_id),
                               {

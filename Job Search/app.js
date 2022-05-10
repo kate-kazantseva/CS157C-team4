@@ -428,9 +428,12 @@ app.get('/inbox/applications', async function (req, res) {
 });
 
 app.post('/status/:app_id', async function (req, res) {
+  console.log(req.params.app_id);
+  console.log(req.body.status);
   if (req.user) {
-    if (req.body != "select status")
+    if (req.body.status != "select status") {
       client.json.set(decodeURI(req.params.app_id), "$.status", req.body.status);
+    }
     res.status(201).send();
   } else res.status(401).send();
 });
