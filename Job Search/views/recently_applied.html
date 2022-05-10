@@ -19,24 +19,34 @@
                   }
                   else{
                   const newDiv = document.createElement("div");
+                  const infoDiv = document.createElement("div");
+                  const statusDiv = document.createElement("div");
+                  statusDiv.innerHTML = element.status;
+                  statusDiv.style.display = "inline-block";
+                  infoDiv.style.display = "inline-block";
+                  statusDiv.style.textAlign = "center";
+                  statusDiv.style.width = "100px";
                   const link = document.createTextNode(element.job_title)
                   const loc = document.createTextNode(element.location)
                   const name = document.createTextNode(element.company_name)
                   var h3 = document.createElement('h5');
                   h3.appendChild(link)
-                  newDiv.appendChild(h3);
-                  var h4 = document.createElement('h6')
-                  h4.appendChild(loc)
-                  newDiv.appendChild(h4)
+                  infoDiv.appendChild(h3);
                   var h4 = document.createElement('h6')
                   h4.appendChild(name)
-                  newDiv.appendChild(h4)
+                  infoDiv.appendChild(h4)
+                  h4 = document.createElement('h6')
+                  h4.appendChild(loc)
+                  infoDiv.appendChild(h4)
+                  infoDiv.style.width = "325px";
                   const container = document.getElementById("submittedjobs");
                   container.appendChild(newDiv);
                   newDiv.classList.add('panel-item')
                   newDiv.style.display = "inline-block";
                   newDiv.style.width = "500px";
                   newDiv.style.margin = "20px";
+                  newDiv.appendChild(infoDiv);
+                  newDiv.appendChild(statusDiv);
                   }
                 });
             });

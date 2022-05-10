@@ -675,7 +675,14 @@ app.get('/submitted_apps', async function (req, res) {
     res.status(200).send([{'msg':'no'}]);
   }
   else{
-  res.status(200).send(user.submitted_apps);
+    let list = [];
+    for (submitted_app of user.submitted_apps) {
+      let result = await client.json.get(submitted_app.app_id);
+      let app_info = submitted_app;
+      app_info.status = result.status;
+      list.push(app_info);
+    }
+    res.status(200).send(list);
   }
 });
 
