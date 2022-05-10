@@ -237,35 +237,31 @@ app.post('/login', async function(req, res){
     if (!(email && password)) {
       return res.status(400).send("Some fields are missing.");
     }
-
-    client.json.get(email.toLowerCase()).then(function(user) {
-      if (user === undefined || user === null) {
-        res.status(400).send("User with such email was not found.");
-      }
-      if (Object.prototype.hasOwnProperty.call(user, 'password')) {
-        bcrypt.compare(password, user.password).then(function(correct) {
-          if (correct) {
-            const token = jwt.sign(
-              {user_id: email},
-              'secret',
-              {
-                expiresIn: "2h",
-              }
-            );
-            user.email = email;
-            authTokens[token] = user;
-            res.cookie('AuthToken', token)
-            res.cookie('UserFirstName', user.first_name);
-            res.cookie('UserLastName', user.last_name);
-            res.cookie('UserEmail', user.email);
-            res.cookie('UserOrg/School', user.school);
-            res.redirect('homepage');
-          } else 
-          return res.status(400).send("Incorrect password.");
-        });
-      } else
-        return res.status(400).send("User with such email was not found.");
-    });
+    let user = await client.json.get(email.toLowerCase());
+    if (user === undefined || user === null) {
+      res.status(400).send("User with such email was not found.");
+    } else {
+      bcrypt.compare(password, user.password).then(function(correct) {
+        if (correct) {
+          const token = jwt.sign(
+            {user_id: email},
+            'secret',
+            {
+              expiresIn: "2h",
+            }
+          );
+          user.email = email;
+          authTokens[token] = user;
+          res.cookie('AuthToken', token)
+          res.cookie('UserFirstName', user.first_name);
+          res.cookie('UserLastName', user.last_name);
+          res.cookie('UserEmail', user.email);
+          res.cookie('UserOrg/School', user.school);
+          res.redirect('homepage');
+        } else 
+        return res.status(400).send("Incorrect password.");
+      });
+    }
   } catch (err) {
     console.log(err);
   }
