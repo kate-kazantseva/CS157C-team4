@@ -50,6 +50,8 @@
                   var apps = element.app_info_list;
                   apps.reverse();
                   newDiv.addEventListener("click",function() {
+                    var fullAppInfo = document.getElementById("full_app");
+                    fullAppInfo.innerHTML = "";
                     fetch('/inbox/reset/' + element.job_id);
                     newCountDiv.innerHTML = "";
                     const count = document.createTextNode("0");
