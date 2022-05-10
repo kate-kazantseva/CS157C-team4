@@ -47,3 +47,34 @@
 .btn-primary:hover{
     cursor:pointer;
 }
+
+.del-btn{
+    background-color:#d11a2a;
+    float:right;
+    width:6rem;
+    height:2rem;
+    border-radius:1rem;
+    border:none;
+    color:white;
+    margin-right:20rem;
+    margin-top:-2rem;
+}
+
+.del-btn:hover{
+    cursor:pointer;
+    background-color:#921822;
+}
+
+.edit-btn{
+    background-color:#393939;
+    width:6rem;
+    height:2rem;
+    border-radius:1rem;
+    border:none;
+    color:white;
+}
+
+.edit-btn:hover{
+    cursor:pointer;
+    background-color:black;
+}

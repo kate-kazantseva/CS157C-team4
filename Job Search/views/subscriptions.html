@@ -35,13 +35,14 @@
           json[key].forEach(element => {
             let keyDiv = document.createElement("div");
             p = document.createElement("p");
-            let del_key = document.createElement("p");
+            let del_key = document.createElement("button");
             del_key.innerHTML = "x";
-            del_key.style.width = "30";
-            del_key.style.margin = "0";
+            del_key.classList.add("unsub");
+            //del_key.style.width = "30";
+            //del_key.style.margin = "0";
             p.style.display = "inline";
-            del_key.style.display = "inline";
-            del_key.style.float = "right";
+            //del_key.style.display = "inline";
+            //del_key.style.float = "right";
             del_key.id = element;
             del_key.style.cursor = "pointer";
             p.style.margin = "0";
@@ -108,15 +109,16 @@
                   if (channelDiv != undefined) {
                     let keyDiv = document.createElement("div");
                     p = document.createElement("p");
-                    let del_key = document.createElement("p");
+                    let del_key = document.createElement("button");
                     del_key.innerHTML = "x";
-                    del_key.style.width = "30";
-                    del_key.style.margin = "0";
+                    del_key.classList.add("unsub");
+                    //del_key.style.width = "30";
+                    //del_key.style.margin = "0";
                     p.style.display = "inline";
-                    del_key.style.display = "inline";
-                    del_key.style.float = "right";
+                    //del_key.style.display = "inline";
+                    //del_key.style.float = "right";
                     del_key.id = keywords.value;
-                    del_key.style.cursor = "pointer";
+                    //del_key.style.cursor = "pointer";
                     p.style.margin = "0";
                     text = document.createTextNode(keywords.value);
                     p.style.width = "230px";
@@ -170,15 +172,16 @@
 
                     let keyDiv = document.createElement("div");
                     p = document.createElement("p");
-                    let del_key = document.createElement("p");
+                    let del_key = document.createElement("button");
                     del_key.innerHTML = "x";
-                    del_key.style.width = "30";
-                    del_key.style.margin = "0";
+                    del_key.classList.add("unsub");
+                    //del_key.style.width = "30";
+                    //del_key.style.margin = "0";
                     p.style.display = "inline";
-                    del_key.style.display = "inline";
-                    del_key.style.float = "right";
+                    //del_key.style.display = "inline";
+                    //del_key.style.float = "right";
                     del_key.id = keywords.value;
-                    del_key.style.cursor = "pointer";
+                    //del_key.style.cursor = "pointer";
                     p.style.margin = "0";
                     text = document.createTextNode(keywords.value);
                     p.style.width = "230px";
@@ -216,13 +219,13 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/css/base.css">
-    <link rel="stylesheet" type="text/css" href="/css/settings-student.css">
+    <link rel="stylesheet" type="text/css" href="/css/subscriptions.css">
     <title>Subscriptions</title>
     
 </head>
 <body>
-  <div class="navbar navbar-expand-lg navbar-dark bg-dark" role="navigation">
-    <a class="navbar-brand" href="/homepage">Job Search</a>
+  <div class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark" role="navigation">
+    <a class="navbar-brand" href="/homepage">JobStart</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -258,13 +261,12 @@
           <div id="sub-box">
             <div id="subscribe">
             <p >Subscribe to receive email notifications when new jobs are posted</p>
-            <label for="key">Keywords</label>
-            <div class="form-row">
-              <input type="key" name="key" id="key" aria-describedby="Keywords" placeholder="engineer" value="" size="40" class="line-input sub-input"/>
-            </div>
-            <label for="loc">Location</label>
-            <div class="form-row">
-              <input type="location" name="loc" id="loc" aria-describedby="Location" placeholder="Mountain View, CA" value="" size="40" class="line-input sub-input"/>
+            
+            <div class="form-group">
+              <label for="key">Keywords</label><br>
+              <input type="key" name="key" id="key" aria-describedby="Keywords" placeholder="engineer" value="" size="40" class="line-input sub-input"/><br>
+              <label for="loc">Location</label><br>
+              <input type="location" name="loc" id="loc" aria-describedby="Location" placeholder="Mountain View, CA" value="" size="40" class="line-input sub-input"/><br>
             </div>
             <input class="btn btn-primary sub-btn" value="Subscribe" id="sub-button"><br><br>
             </div>

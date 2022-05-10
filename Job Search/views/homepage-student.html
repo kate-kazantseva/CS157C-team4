@@ -40,12 +40,23 @@
                   }
                   const newDiv = document.createElement("div");
                   const infoDiv = document.createElement("div");
+                  const statusLabelDiv = document.createElement("div");
+                  const currentStatusDiv = document.createElement("div");
                   const statusDiv = document.createElement("div");
-                  statusDiv.innerHTML = element.status;
-                  statusDiv.style.display = "inline-block";
+                  statusLabelDiv.innerHTML = "Status: ";
+                  currentStatusDiv.innerHTML = element.status;
+                  statusDiv.classList.add('status');
+                  if(element.status == "accepted"){
+                    currentStatusDiv.style.color="green";
+                  }
+                  else if(element.status == "rejected"){
+                    currentStatusDiv.style.color = "#d11a2a";
+                  }
+                  currentStatusDiv.style.fontStyle="italic";
+                  statusDiv.appendChild(statusLabelDiv);
+                  statusDiv.appendChild(currentStatusDiv );
                   infoDiv.style.display = "inline-block";
-                  statusDiv.style.textAlign = "center";
-                  statusDiv.style.width = "80px";
+
                   const link = document.createTextNode(element.job_title)
                   const loc = document.createTextNode(element.location)
                   const name = document.createTextNode(element.company_name)
@@ -150,11 +161,11 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/css/base.css">
     <link rel="stylesheet" type="text/css" href="/css/dashboard.css">
-	  <title>Job Search</title>
+	  <title>JobStart</title>
   </head>
   <body>
-    <div class="navbar navbar-expand-lg navbar-dark bg-dark" role="navigation">
-      <a class="navbar-brand" href="/homepage">Job Search</a>
+    <div class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark" role="navigation">
+      <a class="navbar-brand" href="/homepage">JobStart</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>

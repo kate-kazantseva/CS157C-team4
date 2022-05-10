@@ -69,3 +69,9 @@ a.view-all:active{
     margin-left:auto;
     text-decoration:underline;
 }
+
+.status{
+    float:right;
+    vertical-align: middle;
+    margin-top:1rem;
+}

@@ -1,0 +1,38 @@
+#sub-box{
+    margin-bottom:3rem;
+}
+
+#curr-subs{
+    border-top: solid 0.1rem lightgray;
+    padding-top:1rem;
+    text-align:left;
+}
+
+.sub-module{
+    height:auto;
+    padding:2rem;
+    text-align: center;
+}
+.sub-btn,
+.sub-btn:hover{
+    width:200px;
+    height:30px;
+    margin-bottom:-10px;
+}
+
+.unsub{
+    width:1.75rem;
+    height:1.75rem;
+    border: white solid 0.05rem;
+    border-radius:50%;
+    margin-left:0.5rem;
+    color:gray;
+    font-size:12pt;
+    font-style:bold;
+    background-color:white;
+}
+
+.unsub:hover{
+    background-color:#f0f0f0;
+    cursor:pointer;
+}

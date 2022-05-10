@@ -54,14 +54,13 @@
                         form.action = "/edit/" + element.job_id;
                         edit_button.type = "submit";
                         edit_button.value = "Edit";
-                        edit_button.classList.add("btn-primary");
+                        edit_button.classList.add("edit-btn");
                         form.appendChild(hidden_data);
                         form.appendChild(edit_button);
                         full_info.appendChild(form);
-                        full_info.appendChild(document.createElement("br"));
                         //delete button
                         const delete_button = document.createElement("button");
-                        delete_button.classList.add("btn-primary");
+                        delete_button.classList.add("del-btn");
                         delete_button.innerHTML = "Delete";
                         delete_button.addEventListener("click", function () {
                                  
@@ -72,11 +71,10 @@
                                                                               { location.reload();}});
                                   
                                 });
-                        full_info.appendChild(document.createElement("br"));
 
                         full_info.appendChild(delete_button);
                         full_info.appendChild(document.createElement("br"));
-
+                        
                         // job info
                         var sal = document.createTextNode("Salary range: " + element.salary_range_start +  " - " + element.salary_range_end + " per " + element.salary_type);
                         full_info.appendChild(sal);
@@ -116,8 +114,8 @@
         <title>Saved Jobs</title>
     </head>
     <body>
-        <div class="navbar navbar-expand-lg navbar-dark bg-dark" role="navigation">
-            <a class="navbar-brand" href="/homepage">Job Search</a>
+        <div class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark" role="navigation">
+            <a class="navbar-brand" href="/homepage">JobStart</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>

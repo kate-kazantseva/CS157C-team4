@@ -92,3 +92,9 @@ h1{
     padding:0rem 0.25rem 0rem 0.25rem;
     margin-top:0.5rem;
 }
+
+.status{
+    float:right;
+    vertical-align: middle;
+    margin-top:1rem;
+}
