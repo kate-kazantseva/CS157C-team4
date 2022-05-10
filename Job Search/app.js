@@ -502,8 +502,14 @@ app.delete('/save_job', async function (req, res) {
 app.delete('/delete_job', async function (req, res) {
   console.log('in delete api');
   console.log('job id id'+req.body.job_id);
+  user = await client.json.get(decodeURI(req.cookies['UserEmail']));
   await client.json.del(req.body.job_id);
-  res.status(200).send();
+  for (i in user.created_jobs) {
+    if (user.created_jobs[i] == req.body.job_id) {
+      client.json.arrPop(decodeURI(req.cookies['UserEmail']), "$.created_jobs", i);
+      res.status(200).send();
+    }
+  }
   res.status(400).send();
 });
 
