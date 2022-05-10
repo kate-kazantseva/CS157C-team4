@@ -59,6 +59,24 @@
                         form.appendChild(edit_button);
                         full_info.appendChild(form);
                         full_info.appendChild(document.createElement("br"));
+                        //delete button
+                        const delete_button = document.createElement("button");
+                        delete_button.classList.add("btn-primary");
+                        delete_button.innerHTML = "Delete";
+                        delete_button.addEventListener("click", function () {
+                                 
+                                      fetch('/delete_job', { method: 'DELETE',
+                                                          body: JSON.stringify(element),
+                                                          headers: {'Content-Type': 'application/json'}
+                                                          }).then(response => { if (response.status == 200)
+                                                                              { location.reload();}});
+                                  
+                                });
+                        full_info.appendChild(document.createElement("br"));
+
+                        full_info.appendChild(delete_button);
+                        full_info.appendChild(document.createElement("br"));
+
                         // job info
                         var sal = document.createTextNode("Salary range: " + element.salary_range_start +  " - " + element.salary_range_end + " per " + element.salary_type);
                         full_info.appendChild(sal);
