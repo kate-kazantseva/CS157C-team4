@@ -498,6 +498,15 @@ app.delete('/save_job', async function (req, res) {
   res.status(400).send();
 });
 
+//delete job 
+app.delete('/delete_job', async function (req, res) {
+  console.log('in delete api');
+  console.log('job id id'+req.body.job_id);
+  await client.json.del(req.body.job_id);
+  res.status(200).send();
+  res.status(400).send();
+});
+
 app.get('/saved_jobs', async function (req, res) {
   user = await client.json.get(decodeURI(req.cookies['UserEmail']));
   res.setHeader('content-type', 'application/json');
@@ -511,11 +520,13 @@ app.get('/saved_jobs', async function (req, res) {
         if (saved_job != null || saved_job != undefined) {
           saved_job.job_id = job;
           if (saved_job != null)
+          if(user.submitted_apps !=undefined){
             for (job_app of user.submitted_apps) {
               if (job_app.job_id == job) {
                 saved_job.applied = true;
               } else saved_job.applied = false;
             }
+          }
             list.push(saved_job);
         }
       }
