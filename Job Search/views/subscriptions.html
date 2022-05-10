@@ -1,0 +1,280 @@
+<html>
+<head>
+  <script>
+    fetch('/subscriptions').then(res => res.json()).then(json => {
+      if (Object.keys(json).length > 0) {
+        const curr_subs = document.getElementById("curr-subs");
+        curr_subs.hidden = false;
+        Object.keys(json).forEach(key => {
+          const newDiv = document.createElement("div");
+          newDiv.id = key;
+          let loc = key.split("_");
+          if (loc.length > 1)
+            loc[loc.length - 1] = loc[loc.length - 1].toUpperCase();
+          const parsed = [];
+          loc.forEach((elem, idx) => {
+            if (idx == loc.length - 1)
+              parsed[idx] = elem.toUpperCase();
+            else {
+              parsed[idx] = elem.charAt(0).toUpperCase() + elem.slice(1);
+            }
+          });
+          console.log(parsed);
+          let p = document.createElement("p");
+          let text = document.createTextNode("Location: " + parsed.join(" "));
+          p.style.margin = "0";
+          p.style.marginTop = "15";
+          p.appendChild(text);
+          newDiv.appendChild(p);
+          console.log(json[key]);
+          const keys = document.createElement("p");
+          text = document.createTextNode("Keywords: ");
+          keys.style.margin = "0";
+          keys.appendChild(text);
+          newDiv.appendChild(keys);
+          json[key].forEach(element => {
+            let keyDiv = document.createElement("div");
+            p = document.createElement("p");
+            let del_key = document.createElement("p");
+            del_key.innerHTML = "x";
+            del_key.style.width = "30";
+            del_key.style.margin = "0";
+            p.style.display = "inline";
+            del_key.style.display = "inline";
+            del_key.style.float = "right";
+            del_key.id = element;
+            del_key.style.cursor = "pointer";
+            p.style.margin = "0";
+            text = document.createTextNode(element);
+            p.style.width = "230px";
+            p.appendChild(text);
+            keyDiv.appendChild(p);
+            keyDiv.appendChild(del_key);
+            newDiv.appendChild(keyDiv);
+            del_key.addEventListener("click", function () {              
+              fetch('/unsubscribe',
+                    {
+                      method: "DELETE",
+                      body: '{ "channel": ' + JSON.stringify(newDiv.id) + ', "key":' + JSON.stringify(element) + '}',
+                      headers: {'Content-Type': 'application/json'}
+                    }).then(res => {
+                                      if (res.status == 200) {
+                                        if (keyDiv.parentNode.childElementCount <= 3)
+                                          if (keyDiv.parentNode.parentNode.childElementCount <= 2)
+                                            keyDiv.parentNode.parentNode.remove();
+                                          else keyDiv.parentNode.remove();
+                                        else keyDiv.remove();
+                                      }
+                                    }); 
+            });
+          });
+          curr_subs.appendChild(newDiv);
+        });
+      }
+    });
+
+    window.onload = function() {
+      const keywords = document.getElementById("key");
+      const loc = document.getElementById("loc");
+      const sub_button = document.getElementById("sub-button");
+      sub_button.addEventListener("click", function () {
+        if (keywords.value.trim().length <= 0 || loc.value.trim().length <= 0) {
+          let check = document.getElementById("alert-msg");
+          if (check != null) return;
+          let alert_msg = document.createElement("p");
+          alert_msg.id = "alert-msg";
+          let msg = document.createTextNode("Please enter keywords and location");
+          let subscribe = document.getElementById("subscribe");
+          alert_msg.appendChild(msg);
+          alert_msg.style.textAlign = "center";
+          alert_msg.style.fontSize = "15";
+          alert_msg.style.margin = "0";
+          let sub_box = document.getElementById("sub-box");
+          subscribe.appendChild(alert_msg);
+          return;
+        }
+        fetch('/subscribe', 
+              {
+                method: "POST",
+                body: '{ "key": ' + JSON.stringify(keywords.value) + ', "loc":' + JSON.stringify(loc.value) + '}',
+                headers: {'Content-Type': 'application/json'}
+              }).then(res => res.json())
+              .then(json => 
+              {
+                if (json.channel != undefined) {
+                  const curr_subs = document.getElementById("curr-subs");
+                  curr_subs.hidden = false;
+                  const channelDiv = document.getElementById(json.channel);
+                  if (channelDiv != undefined) {
+                    let keyDiv = document.createElement("div");
+                    p = document.createElement("p");
+                    let del_key = document.createElement("p");
+                    del_key.innerHTML = "x";
+                    del_key.style.width = "30";
+                    del_key.style.margin = "0";
+                    p.style.display = "inline";
+                    del_key.style.display = "inline";
+                    del_key.style.float = "right";
+                    del_key.id = keywords.value;
+                    del_key.style.cursor = "pointer";
+                    p.style.margin = "0";
+                    text = document.createTextNode(keywords.value);
+                    p.style.width = "230px";
+                    p.appendChild(text);
+                    keyDiv.appendChild(p);
+                    keyDiv.appendChild(del_key);
+                    channelDiv.appendChild(keyDiv);
+                    del_key.addEventListener("click", function () {              
+                      fetch('/unsubscribe',
+                            {
+                              method: "DELETE",
+                              body: '{ "channel": ' + JSON.stringify(channelDiv.id) + ', "key":' + JSON.stringify(keywords.value) + '}',
+                              headers: {'Content-Type': 'application/json'}
+                            }).then(res => {
+                                              if (res.status == 200) {
+                                                if (keyDiv.parentNode.childElementCount <= 3)
+                                                  if (keyDiv.parentNode.parentNode.childElementCount <= 2)
+                                                    keyDiv.parentNode.parentNode.remove();
+                                                  else keyDiv.parentNode.remove();
+                                                else keyDiv.remove();
+                                              }
+                                            }); 
+                    });
+                    curr_subs.appendChild(channelDiv);
+                  } else {
+                    const newDiv = document.createElement("div");
+                    newDiv.id = json.channel;
+                    let loc = json.channel.split("_");
+                    if (loc.length > 1)
+                      loc[loc.length - 1] = loc[loc.length - 1].toUpperCase();
+                    const parsed = [];
+                    loc.forEach((elem, idx) => {
+                      if (idx == loc.length - 1)
+                        parsed[idx] = elem.toUpperCase();
+                      else {
+                        parsed[idx] = elem.charAt(0).toUpperCase() + elem.slice(1);
+                      }
+                    });
+                    console.log(parsed);
+                    let p = document.createElement("p");
+                    let text = document.createTextNode("Location: " + parsed.join(" "));
+                    p.style.margin = "0";
+                    p.style.marginTop = "15";
+                    p.appendChild(text);
+                    newDiv.appendChild(p);
+                    const keys = document.createElement("p");
+                    text = document.createTextNode("Keywords: ");
+                    keys.style.margin = "0";
+                    keys.appendChild(text);
+                    newDiv.appendChild(keys);
+
+                    let keyDiv = document.createElement("div");
+                    p = document.createElement("p");
+                    let del_key = document.createElement("p");
+                    del_key.innerHTML = "x";
+                    del_key.style.width = "30";
+                    del_key.style.margin = "0";
+                    p.style.display = "inline";
+                    del_key.style.display = "inline";
+                    del_key.style.float = "right";
+                    del_key.id = keywords.value;
+                    del_key.style.cursor = "pointer";
+                    p.style.margin = "0";
+                    text = document.createTextNode(keywords.value);
+                    p.style.width = "230px";
+                    p.appendChild(text);
+                    keyDiv.appendChild(p);
+                    keyDiv.appendChild(del_key);
+                    newDiv.appendChild(keyDiv);
+                    del_key.addEventListener("click", function () {              
+                      fetch('/unsubscribe',
+                            {
+                              method: "DELETE",
+                              body: '{ "channel": ' + JSON.stringify(newDiv.id) + ', "key":' + JSON.stringify(keywords.value) + '}',
+                              headers: {'Content-Type': 'application/json'}
+                            }).then(res => {
+                                              if (res.status == 200) {
+                                                if (keyDiv.parentNode.childElementCount <= 3)
+                                                  if (keyDiv.parentNode.parentNode.childElementCount <= 2)
+                                                    keyDiv.parentNode.parentNode.remove();
+                                                  else keyDiv.parentNode.remove();
+                                                else keyDiv.remove();
+                                              }
+                                            }); 
+                    });
+                  curr_subs.appendChild(newDiv);
+                  }
+                }
+              }
+              );
+      });
+    } 
+
+  </script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/base.css">
+    <link rel="stylesheet" type="text/css" href="/css/settings-student.css">
+    <title>Subscriptions</title>
+    
+</head>
+<body>
+  <div class="navbar navbar-expand-lg navbar-dark bg-dark" role="navigation">
+    <a class="navbar-brand" href="/homepage">Job Search</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/savedjobs">Saved Jobs</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="recently_applied">Recently Applied</a>
+        </li>
+        <li class="nav-item">
+          <!-- Replace with search icon-->
+          <a class="nav-link" href="/job_search">Search</a>
+        </li>
+        <li class="nav-item">
+          <!-- Replace with person icon-->
+          <a class="nav-link" href="/settings">Settings</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/my_subscriptions">Subscriptions</a>
+          </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/logout">Logout</a>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+    <h1>Subscriptions</h1> 
+    <div class = "container">
+        <div class="sub-module">
+          <div id="sub-box">
+            <div id="subscribe">
+            <p >Subscribe to receive email notifications when new jobs are posted</p>
+            <label for="key">Keywords</label>
+            <div class="form-row">
+              <input type="key" name="key" id="key" aria-describedby="Keywords" placeholder="engineer" value="" size="40" class="line-input sub-input"/>
+            </div>
+            <label for="loc">Location</label>
+            <div class="form-row">
+              <input type="location" name="loc" id="loc" aria-describedby="Location" placeholder="Mountain View, CA" value="" size="40" class="line-input sub-input"/>
+            </div>
+            <input class="btn btn-primary sub-btn" value="Subscribe" id="sub-button"><br><br>
+            </div>
+            
+          </div>
+          <div hidden id="curr-subs">
+            <h5 style="text-align: center; font-weight:bold; vertical-align: top;" id="curr-title">Current Subscriptions</h5>
+          </div>
+        </div>
+    </div>
+    
+</body>
+</html>

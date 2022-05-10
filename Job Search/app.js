@@ -187,6 +187,14 @@ app.get('/submitted-application', function(req, res, next){
   }
 });
 
+app.get('/my_subscriptions', function (req, res) {
+  if (req.user) {
+    if (req.user.type === "student") {
+      res.sendFile(__dirname + '/views/subscriptions.html');
+    }
+  } else res.redirect('login');
+}); 
+
 //Sign up API
 app.post('/register', async function(req, res, next) {
   try {
