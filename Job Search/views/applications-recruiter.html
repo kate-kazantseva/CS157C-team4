@@ -4,17 +4,12 @@
         <script>
             fetch('/inbox/applications').then(res => res.json()).then(json => {
               console.log(json);
-                if (json === []) {
+                if (json.length === 0) {
                   const newDiv = document.createElement("div");
-                  const br = document.createElement("BR")
-                  var h3 = document.createElement('h3');
-                  const link = document.createTextNode('You do not have any job listings at this time!!')
-                  h3.appendChild(link)
+                  const emptyJobs = document.createTextNode('You do not have any job listings at this time')
                   const container = document.getElementById("joblistings");
-                  newDiv.appendChild(br)
-                  newDiv.appendChild(br)
-                  newDiv.appendChild(br)
-                  newDiv.appendChild(h3)
+                  newDiv.classList.add("empty-message");
+                  newDiv.appendChild(emptyJobs);
                   container.appendChild(newDiv);
                   return;
                 }
@@ -52,6 +47,11 @@
                   newDiv.addEventListener("click",function() {
                     var fullAppInfo = document.getElementById("full_app");
                     fullAppInfo.innerHTML = "";
+                    const emptyMessageDiv = document.createElement("div");
+                    const noAppsSelected = document.createTextNode('No application selected')
+                    emptyMessageDiv.appendChild(noAppsSelected);
+                    emptyMessageDiv.classList.add("no-apps");
+                    fullAppInfo.appendChild(emptyMessageDiv);
                     fetch('/inbox/reset/' + element.job_id);
                     newCountDiv.innerHTML = "";
                     const count = document.createTextNode("0");
@@ -60,6 +60,14 @@
                     newCountDiv.appendChild(p);
                     var app_cont = document.getElementById('app');
                     app_cont.innerHTML = "";
+                    if (apps.length === 0){
+                    const newDiv = document.createElement("div");
+                    const emptyJobs = document.createTextNode('This job listing has no applications at this time')
+                    const container = document.getElementById("app");
+                    newDiv.classList.add("empty-message");
+                    newDiv.appendChild(emptyJobs);
+                    container.appendChild(newDiv);
+                  }
                     apps.forEach(application => {
                       var full_info = document.createElement("div");
                       var appDiv = document.createElement("div");
@@ -72,7 +80,10 @@
                       h3.appendChild(last_name);
                       var h6 = document.createElement('h6');
                       var email = document.createTextNode("Email: " + application.email);
+                      var curr_status = document.createTextNode("Application status: " + application.status);
                       h6.appendChild(email);
+                      h6.appendChild(document.createElement("br"));
+                      h6.appendChild(curr_status);
                       appDiv.appendChild(h3);
                       appDiv.appendChild(h6);
                       var select = document.createElement("select");
@@ -100,7 +111,7 @@
                       select.appendChild(seen);
                       var bold = document.createElement("b");
                       h6 = document.createElement('h6');
-                      var status_label = document.createTextNode("Application status:");
+                      var status_label = document.createTextNode("Select new status:");
                       bold.appendChild(status_label);
                       h6.appendChild(bold);                      
                       statusDiv.appendChild(h6);
@@ -130,7 +141,7 @@
                         var education = document.createTextNode("Education: " + application.education);
                         var major = document.createTextNode("Major: " + application.major);
                         var grad = document.createTextNode("Grad date: " + application.grad_date);
-                        var curr_status = document.createTextNode("Current status: " + application.status);
+                        var curr_status = document.createTextNode("Application status: " + application.status);
                         for(var x in application){
                           console.log(x);
                         }
@@ -221,8 +232,10 @@
             <div class="jobs-container" id="joblistings">
             </div>
             <div class="view-app" id="app">
+              <div class="empty-message">No job listing selected</div>
             </div>
             <div class="full-app" id="full_app">
+              <div class="no-apps">No application selected</div>
             </div>
         </div>
     </body>

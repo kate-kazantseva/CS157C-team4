@@ -98,3 +98,10 @@ h1{
     vertical-align: middle;
     margin-top:1rem;
 }
+
+.empty-message{
+    padding-top:1rem;
+    font-size:14pt;
+    color:grey;
+    text-align:center;
+}

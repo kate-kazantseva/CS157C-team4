@@ -44,6 +44,7 @@
 .view-app{
     width:30%;
     height:40rem;
+    overflow:auto;
     word-wrap:break-word;
     padding: 0rem 1rem 1rem 1rem;
     border-right-style:solid;
@@ -82,4 +83,10 @@
     margin:18px;
     padding-top:5px;
     text-align:center;
+}
+
+.no-apps{
+    color:grey;
+    text-align:center;
+    font-size:14pt;
 }
