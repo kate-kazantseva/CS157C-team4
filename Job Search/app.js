@@ -222,7 +222,7 @@ app.post('/register', async function(req, res, next) {
     };
 
     client.json.set(email.toLowerCase(), '$', user);
-    res.redirect('login');
+    res.status(201).send();
     
   } catch (err) {
     console.log(err);
@@ -233,7 +233,7 @@ app.post('/register', async function(req, res, next) {
 app.post('/login', async function(req, res){
   try {
     const { email, password } = req.body;
-    //validate input
+    //validate input`
     if (!(email && password)) {
       return res.status(400).send("Some fields are missing.");
     }
@@ -257,7 +257,7 @@ app.post('/login', async function(req, res){
           res.cookie('UserLastName', user.last_name);
           res.cookie('UserEmail', user.email);
           res.cookie('UserOrg/School', user.school);
-          res.redirect('homepage');
+          res.status(200).send();
         } else 
         return res.status(400).send("Incorrect password.");
       });

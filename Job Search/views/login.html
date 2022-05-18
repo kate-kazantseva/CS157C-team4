@@ -1,5 +1,24 @@
 <!DOCTYPE html>
   <head>
+	<script>
+		window.onload = function() {
+			let submit = document.getElementById("submit");
+			submit.addEventListener("click", function() {
+				let email = document.getElementById("email");
+				let pword = document.getElementById("password");
+				fetch("/login", {
+					method: "POST",
+					body: '{ "email": ' + JSON.stringify(email.value) +
+						  ', "password": ' + JSON.stringify(pword.value) + '}',
+					headers: {'Content-Type': 'application/json'}
+				}).then(res => { 
+					if (res.status == 200) { window.location.pathname = '/homepage';}
+					else { res.text().then(msg => alert(msg))}
+				});
+			});
+		}
+
+	</script>
 	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
@@ -11,22 +30,21 @@
 	<div class="container">
 		<div class="center-box">
 			<h1>Login</h1><br><br>
-			<form action="/login" method="post">
-			<!-- user input-->
-			Email
-			<div class = "form-row">
-				<input type="text" name="email" placeholder="example@email.com" required class="line-input"><br><br>
+			<div>
+				<!-- user input-->
+				Email
+				<div class = "form-row">
+					<input type="text" name="email" placeholder="example@email.com" required class="line-input" id="email"><br><br>
+				</div>
+				Password
+				<div class = "form-row">
+					<input type="password" name="password" placeholder="*******" required class="line-input" id="password"><br><br>
+				</div>
+				<!-- submit button -->
+				<div class="form-row">
+					<input type="submit" class="btn btn-primary" value="login" id="submit">
+				</div>
 			</div>
-			Password
-			<div class = "form-row">
-				<input type="password" name="password" placeholder="*******" required class="line-input"><br><br>
-			</div>
-			<!-- submit button -->
-			<div class="form-row">
-				<input type="submit" class="btn btn-primary" value="login">
-			</div>
-			
-			</form>
 			Create an acocunt
             <a href="/"> here</a>.
 		</div>
