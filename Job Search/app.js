@@ -569,7 +569,6 @@ app.get('/apply/:id', async function (req, res) {
 app.post('/edit/:id', async function (req, res) {
   if (req.user) {
     job_info = await client.json.get(req.params.id)
-    console.log('This is jobinfo' + job_info.location)
     res.render('main', {layout : 'edit', job_title: req.body.job_title,
                                           info:job_info,
                                                 job_id: req.params.id});
@@ -580,9 +579,13 @@ app.post('/edit/:id', async function (req, res) {
 
 // save the edited job listing on the backend
 app.post('/editted/:id', async function (req, res) {
+  let old_info = await client.json.get(req.params.id);
+  let new_info = req.body;
+  new_info["new_app_count"] = old_info.new_app_count;
+  new_info["applications"] = old_info.applications;
+  new_info["created_by"] = old_info.created_by;
   client.json.set(req.params.id ,"$" ,req.body);
   res.redirect('/homepage');
-
 });
 
 // get joblistings based on criteria
