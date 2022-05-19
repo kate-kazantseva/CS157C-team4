@@ -404,9 +404,8 @@ app.get('/inbox/applications', async function (req, res) {
       if (set != undefined) {
         for (element of set) {
           let job = await client.json.get(element);
-          if(job!=null){
-          job.job_id = element;
-          if (job != undefined || job != null) {
+          if (job != undefined && job != null) {
+            job.job_id = element;
             let app_info_list = [];
             if (job.applications != undefined) {
               for (app_id of job.applications) {
@@ -420,7 +419,6 @@ app.get('/inbox/applications', async function (req, res) {
 
           list.push(job);
         }
-      }
       }
       res.status(200).send(list);
     } else res.status(401).send();
