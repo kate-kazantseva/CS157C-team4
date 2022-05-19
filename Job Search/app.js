@@ -796,6 +796,7 @@ app.delete('/unsubscribe', async function (req, res) {
     let keys = user.sub_keys;
     if (keys[req.body.channel].length == 1) {
       client.json.del(req.user.email, "$.sub_keys." + req.body.channel);
+      client.sRem(req.body.channel, req.body.key);
     } else {
       let idx = keys[req.body.channel].indexOf(req.body.key);
       if (idx != -1)

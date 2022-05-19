@@ -130,7 +130,7 @@
                       fetch('/unsubscribe',
                             {
                               method: "DELETE",
-                              body: '{ "channel": ' + JSON.stringify(channelDiv.id) + ', "key":' + JSON.stringify(keywords.value) + '}',
+                              body: '{ "channel": ' + JSON.stringify(channelDiv.id) + ', "key":' + JSON.stringify(event.target.id) + '}',
                               headers: {'Content-Type': 'application/json'}
                             }).then(res => {
                                               if (res.status == 200) {
@@ -193,7 +193,7 @@
                       fetch('/unsubscribe',
                             {
                               method: "DELETE",
-                              body: '{ "channel": ' + JSON.stringify(newDiv.id) + ', "key":' + JSON.stringify(keywords.value) + '}',
+                              body: '{ "channel": ' + JSON.stringify(newDiv.id) + ', "key":' + JSON.stringify(event.target.id) + '}',
                               headers: {'Content-Type': 'application/json'}
                             }).then(res => {
                                               if (res.status == 200) {
