@@ -101,7 +101,8 @@ h1{
 
 .empty-message{
     padding-top:1rem;
-    font-size:14pt;
+    font-size:100%;
     color:grey;
     text-align:center;
+    width:100%;
 }

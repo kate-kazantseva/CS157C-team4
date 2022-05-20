@@ -4,6 +4,15 @@
         <script>
 
             fetch('/jobs').then(res => res.json()).then(json => { 
+                if (json.length == 0) {
+                  const newDiv = document.createElement("div");
+                  const link = document.createTextNode('No job listings available')
+                  newDiv.appendChild(link);
+                  newDiv.classList.add('empty-message');
+                  const container = document.getElementById("jobs");
+                  container.appendChild(newDiv);
+                  return;
+                }
                 json.forEach((element, i) => {
                     const newDiv = document.createElement("div");
                     const infoDiv = document.createElement("div");
@@ -131,6 +140,15 @@
                             // display results
                             jobs_container.innerHTML = "";
                             var search_results = json;
+                            if (search_results.length == 0){
+                              const newDiv = document.createElement("div");
+                              const link = document.createTextNode('No job listings found')
+                              newDiv.appendChild(link);
+                              newDiv.classList.add('empty-message');
+                              const container = document.getElementById("jobs");
+                              container.appendChild(newDiv);
+                              return;
+                            }
                             search_results.forEach((element, i) =>{
                               const newDiv = document.createElement("div");
                               const infoDiv = document.createElement("div");
@@ -333,7 +351,7 @@
 
           </div>
           <div class="view-job" id="view-job">
-            <div class="empty-message">No job listing selected</div>
+            <div class="empty-message" style="margin-top:-1rem;">No job listing selected</div>
           </div>
         </div>
     </body>

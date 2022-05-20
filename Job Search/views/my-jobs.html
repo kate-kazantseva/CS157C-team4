@@ -4,17 +4,13 @@
         <script>
             fetch('/created_jobs').then(res => res.json()).then(json => {
                 console.log(json);
-                if (json == []) {
+                if (json.length == 0) {
                     const newDiv = document.createElement("div");
                     const br = document.createElement("BR")
-                    var h3 = document.createElement('h3');
-                    const link = document.createTextNode('You do not have any job listings at this time!!')
-                    h3.appendChild(link)
+                    const link = document.createTextNode('You do not have any job listings at this time')
+                    newDiv.append(link)
                     const container = document.getElementById("joblistings");
-                    newDiv.appendChild(br)
-                    newDiv.appendChild(br)
-                    newDiv.appendChild(br)
-                    newDiv.appendChild(h3)
+                    newDiv.classList.add('empty-message');
                     container.appendChild(newDiv);
                     return;
                 }
@@ -147,7 +143,7 @@
 
             </div>
             <div class="view-job" id="view-job">
-                <div class="empty-message">No job listing selected</div>
+                <div class="empty-message" style="margin-top:-1rem">No job listing selected</div>
             </div>
         </div>
     </body>

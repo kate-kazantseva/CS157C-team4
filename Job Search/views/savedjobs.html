@@ -6,14 +6,10 @@
               if (json.length == 0) {
                 const newDiv = document.createElement("div");
                 const br = document.createElement("BR")
-                var h3 = document.createElement('h4');
                 const link = document.createTextNode('You do not have any saved jobs at this time')
-                h3.appendChild(link)
+                newDiv.appendChild(link)
+                newDiv.classList.add('empty-message');
                 const container = document.getElementById("savedjobs");
-                newDiv.appendChild(br)
-                newDiv.appendChild(br)
-                newDiv.appendChild(br)
-                newDiv.appendChild(h3)
                 container.appendChild(newDiv);
               } else {
                 json.reverse();
@@ -141,7 +137,7 @@
 
             </div>
             <div class="view-job" id="view-job">
-              <div class="empty-message">No job listing selected</div>
+              <div class="empty-message" style="margin-top:-1rem;">No job listing selected</div>
             </div>
         </div>
         
