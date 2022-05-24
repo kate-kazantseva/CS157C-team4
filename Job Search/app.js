@@ -546,20 +546,35 @@ app.get('/saved_jobs', async function (req, res) {
 });
 
 app.post('/apply/:id', async function (req, res) {
-  if (decodeURI(req.cookies['UserEmail'])) {
-    res.render('main', {layout : 'application', job_title: req.body.job_title,
-                                                job_id: req.params.id});
+  if (req.user) {
+    if (req.user.type == 'student')
+      res.render('main', {layout : 'application', job_title: req.body.job_title,
+                                                  job_id: req.params.id});
+    else res.status(401).send("401 Unauthorized");
   } else {
     res.redirect('login');
   }
 });
 
 app.get('/apply/:id', async function (req, res) {
-  if (decodeURI(req.cookies['UserEmail'])) {
-    res.render('main', {layout : 'application', job_title: req.body.job_title,
-                                                job_id: req.params.id});
+  if (req.user) {
+    if (req.user.type == 'student')
+      res.render('main', {layout : 'application', job_title: req.body.job_title,
+                                                  job_id: req.params.id});
+    else res.status(401).send("401 Unauthorized");
   } else {
     res.redirect('login');
+  }
+});
+
+app.get('/apply/:user/:id', async function (req, res) {
+  if (req.user) {
+    if (req.user.email == decodeURI(req.params.user))
+      res.render('main', {layout : 'application', job_title: req.body.job_title,
+                                                  job_id: req.params.id});
+    else res.status(401).send("401 Unauthorized");
+  } else {
+    res.redirect('/login');
   }
 });
 

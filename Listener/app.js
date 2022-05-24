@@ -1,5 +1,6 @@
 const redis = require('redis');
 const mailer = require('nodemailer');
+const { urlencoded } = require('body-parser');
 
 let client = redis.createClient(6379, '127.0.0.1');
 const subscriber = client.duplicate();
@@ -34,7 +35,7 @@ async function notify(job_id) {
           email_body = email_body + "<p>Job Type: " + job.job_type + "</p><p>Salary range: " + 
                       job.salary_range_start +  " - " + job.salary_range_end + " per " + job.salary_type +
                       "</p><p>Experience: " + job.experience + "</p><p>" + job.description + "<p>Minimum qualifications: " + job.m_qualifications +
-                      "</p><p>Preferred qualifications: " + job.p_qualifications + "</p>" + "<a href='http://localhost:3000/apply/" + job_id +"'><h3>Apply</h3></a>";
+                      "</p><p>Preferred qualifications: " + job.p_qualifications + "</p>" + "<a href='http://localhost:3000/apply/" + encodeURIComponent(results.members[i]) + "/" + job_id +"'><h3>Apply</h3></a>";
           if (title.includes(key)) {
             const mailOptions = {
               from: 'jobsearch@gmail.com',
