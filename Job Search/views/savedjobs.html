@@ -15,21 +15,50 @@
                 json.reverse();
                 json.forEach(element => {
                   const newDiv = document.createElement("div");
+                  const infoDiv = document.createElement("div");
                   newDiv.classList.add("joblisting")
                   const link = document.createTextNode(element.job_title)
                   const loc = document.createTextNode(element.location)
                   const name = document.createTextNode(element.company_name)
                   var h3 = document.createElement('h5');
                   h3.appendChild(link)
-                  newDiv.appendChild(h3);
+                  infoDiv.appendChild(h3);
                   var h4 = document.createElement('h6')
                   h4.appendChild(name)
-                  newDiv.appendChild(h4)
+                  infoDiv.appendChild(h4)
                   var h4 = document.createElement('h6')
                   h4.appendChild(loc)
-                  newDiv.appendChild(h4)
+                  infoDiv.appendChild(h4)
                   const container = document.getElementById("savedjobs");
+                  const buttonDiv = document.createElement("div");
+                  const save_button = document.createElement("button");
+                
+                  save_button.classList.add("btn-success");
+                  save_button.innerHTML = "Saved!";
+                  save_button.addEventListener("click", function () {
+                      if (save_button.innerHTML == "Save Job") {
+                          fetch('/save_job', { method: 'POST',
+                                                body: JSON.stringify(element),
+                                                headers: {'Content-Type': 'application/json'}
+                                              }).then(response => { if (response.status == 201)
+                                                                    { save_button.innerHTML = "Saved!";}});
+                      } else {
+                          fetch('/save_job', { method: 'DELETE',
+                                                body: JSON.stringify(element),
+                                                headers: {'Content-Type': 'application/json'}
+                                              }).then(response => { if (response.status == 200)
+                                                                    { save_button.innerHTML = "Save Job";}});
+                      }
+                  });
+                  infoDiv.style.display = "inline-block";
+                  buttonDiv.style.display = "inline-block";
+                  buttonDiv.style.float = "right";
+                  buttonDiv.appendChild(save_button);
+                  buttonDiv.style.marginTop = "20px";
+                  newDiv.appendChild(infoDiv);
+                  newDiv.appendChild(buttonDiv);
                   container.appendChild(newDiv);
+
                   newDiv.addEventListener("click",function() {
                     var full_info = document.getElementById('view-job');
                     full_info.innerHTML = "";
@@ -84,7 +113,7 @@
                     var expiration = document.createTextNode("Expiration date: " + element.exp_date);
                     full_info.appendChild(expiration);
                     full_info.appendChild(document.createElement("br"));
-                    })
+                  })
                 
                 });
               }
@@ -96,6 +125,7 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="/css/base.css">
         <link rel="stylesheet" type="text/css" href="/css/jobsviewer.css">
+        <link rel="stylesheet" type="text/css" href="/css/search.css">
         <title>Saved Jobs</title>
     </head>
     <body>
