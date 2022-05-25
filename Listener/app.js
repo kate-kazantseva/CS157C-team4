@@ -10,7 +10,7 @@ var location = "";
 
 (async () => {
   const args = process.argv.slice(2);
-  location = args[0];
+  location = args[0].toLocaleLowerCase();
   const channel = "ch:" + location;
   await subscriber.subscribe(channel, (message) => {
     notify(message);
@@ -35,7 +35,7 @@ async function notify(job_id) {
       if (keys != null || keys != undefined) {
         for (key of keys) {
           key.toLowerCase();
-          let email_body = "<h2>This might interest you: " + job.job_title + " in " + job.location + "</h2>";
+          let email_body = "<h2>This might interest you: " + job.job_title + " at " + job.company_name + " in " + job.location + "</h2>";
           email_body = email_body + "<p>Job Type: " + job.job_type + "</p><p>Salary range: " + 
                       job.salary_range_start +  " - " + job.salary_range_end + " per " + job.salary_type +
                       "</p><p>Experience: " + job.experience + "</p><p>" + job.description + "<p>Minimum qualifications: " + job.m_qualifications +
