@@ -6,11 +6,15 @@ let client = redis.createClient(6379, '127.0.0.1');
 const subscriber = client.duplicate();
 subscriber.connect();
 client.connect();
+var location = "";
 
 (async () => {
-    await subscriber.subscribe('ch:mountain_view_ca', (message) => {
-      notify(message);
-    });
+  const args = process.argv.slice(2);
+  location = args[0];
+  const channel = "ch:" + location;
+  await subscriber.subscribe(channel, (message) => {
+    notify(message);
+  });
 })();
 
 var transporter = mailer.createTransport({
@@ -22,12 +26,12 @@ var transporter = mailer.createTransport({
   });
 
 async function notify(job_id) {
-    results = await client.sScan("mountain_view_ca", 0);
+    results = await client.sScan(location, 0);
     const job = await client.json.get(job_id);
     let title = job.job_title.toLowerCase();
     for (i in results.members) {
       let subscriber = await client.json.get(results.members[i]);
-      let keys = subscriber.sub_keys["mountain_view_ca"];
+      let keys = subscriber.sub_keys[location];
       if (keys != null || keys != undefined) {
         for (key of keys) {
           key.toLowerCase();
@@ -56,7 +60,7 @@ async function notify(job_id) {
           }
         }
       } else {
-        client.sRem("mountain_view_ca", results.members[i]);
+        client.sRem(location, results.members[i]);
       }
     }
 }
